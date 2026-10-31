@@ -1,6 +1,5 @@
 // ==========================================================================
-// CampusTrack - Interactive Map View & HUD Component
-// High-fidelity reproduction of reference UI map canvas & floating HUD
+// CampusTrack - Interactive Map View & HUD Component (Lavasa Campus Edition)
 // ==========================================================================
 
 class MapViewComponent {
@@ -10,16 +9,17 @@ class MapViewComponent {
     this.busMarker = null;
     this.stopMarkers = [];
     this.routePolyline = null;
+    // Lavasa geographic coordinates (Dasve Lake & Christ University)
     this.currentLocation = {
-      latitude: 18.524100,
-      longitude: 73.860100,
-      speed: 35,
-      heading: 58,
-      accuracy: 4.2
+      latitude: 18.407500,
+      longitude: 73.506500,
+      speed: 32,
+      heading: 42,
+      accuracy: 3.8
     };
     this.assignedStop = null;
-    this.busInfo = { label: 'Bus 04', reg: 'KA-04-E-2024' };
-    this.etaInfo = { minutes: 7, distanceKm: 2.4 };
+    this.busInfo = { label: 'Bus 04', reg: 'MH-12-CT-2024' };
+    this.etaInfo = { minutes: 8, distanceKm: 1.8 };
   }
 
   render() {
@@ -29,18 +29,25 @@ class MapViewComponent {
       <div class="map-wrapper">
         <div id="map"></div>
 
-        <!-- Floating Dark HUD Capsule Overlay (Exact Match to Screenshot!) -->
+        <!-- Campus Location Indicator Badge -->
+        <div style="position:absolute; top:16px; left:16px; z-index:25; background:rgba(255,255,255,0.92); backdrop-filter:blur(8px); padding:6px 14px; border-radius:99px; border:1px solid rgba(226,232,240,0.9); box-shadow:0 4px 12px rgba(0,0,0,0.06); display:flex; align-items:center; gap:8px;">
+          <span style="font-size:14px;">📍</span>
+          <span style="font-size:12px; font-weight:700; color:#0f172a;">Lavasa Hill City</span>
+          <span style="font-size:11px; color:#64748b;">• Dasve Lake & Hostels Loop</span>
+        </div>
+
+        <!-- Floating Dark HUD Capsule Overlay (Exact Match to Reference Screenshot) -->
         <div class="floating-hud-capsule" id="mapFloatingHud">
           <div class="hud-segment">
             <span class="hud-value" id="hudBusNumber">04</span>
             <span class="hud-label">Bus Number</span>
           </div>
           <div class="hud-segment highlight">
-            <span class="hud-value highlight" id="hudEtaPrice">ETA: 7 Mins</span>
-            <span class="hud-label" id="hudStopName">St. Peter's Square</span>
+            <span class="hud-value highlight" id="hudEtaPrice">ETA: 8 Mins</span>
+            <span class="hud-label" id="hudStopName">Banyan Tree Boys Hostel</span>
           </div>
           <div class="hud-segment">
-            <span class="hud-value" id="hudSpeedAge">35 km/h</span>
+            <span class="hud-value" id="hudSpeedAge">32 km/h</span>
             <span class="hud-label">Live Speed</span>
           </div>
         </div>
@@ -49,17 +56,17 @@ class MapViewComponent {
         <div class="map-controls-pill">
           <button class="map-pill-btn active" id="simToggleBtn" title="Start/Pause GPS Simulator">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-            <span id="simBtnLabel">Simulate</span>
+            <span id="simBtnLabel">Simulating</span>
           </button>
           <button class="map-pill-btn" id="simSpeedBtn" title="Toggle Speed">2x Speed</button>
-          <button class="map-pill-btn" id="recenterBtn" title="Center map on bus">
+          <button class="map-pill-btn" id="recenterBtn" title="Center map on bus in Lavasa">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"></circle><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line></svg>
-            Center
+            Center Lavasa
           </button>
         </div>
 
         <!-- Floating Bottom-Right Action Button (Matches Screenshot) -->
-        <button class="map-floating-btn" id="mapSupportBtn" title="Help & Emergency SOS">
+        <button class="map-floating-btn" id="mapSupportBtn" title="Campus Safety & Emergency SOS">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
           </svg>
@@ -77,17 +84,17 @@ class MapViewComponent {
       return;
     }
 
-    // Default center at transit corridor
+    // Lavasa Center coordinates: 18.4080° N, 73.5080° E
     const defaultCenter = [this.currentLocation.latitude, this.currentLocation.longitude];
 
     this.map = L.map('map', {
       center: defaultCenter,
-      zoom: 14,
+      zoom: 15,
       zoomControl: false,
       attributionControl: false
     });
 
-    // Custom CartoDB Positron / Minimal light map layer (pastel aesthetics matching reference image)
+    // Custom CartoDB Positron / Minimal light map layer (soft pastel aesthetics matching reference image)
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
       maxZoom: 19,
       subdomains: 'abcd'
@@ -102,7 +109,6 @@ class MapViewComponent {
   renderRoute(route) {
     if (!this.map || !route || !route.stops || !route.stops.length) return;
 
-    // Remove existing stop markers and polyline
     this.stopMarkers.forEach(m => this.map.removeLayer(m));
     this.stopMarkers = [];
     if (this.routePolyline) {
@@ -111,21 +117,23 @@ class MapViewComponent {
 
     const latLngs = [];
 
-    // Create glowing amber stop markers (matching screenshot)
+    // Create glowing amber stop & hostel markers
     route.stops.forEach((stop, index) => {
       const isAssigned = this.assignedStop && this.assignedStop.stop_id === stop.stop_id;
+      const isHostel = stop.stop_name.toLowerCase().includes('hostel');
       latLngs.push([stop.latitude, stop.longitude]);
 
       const stopIcon = L.divIcon({
         className: 'custom-stop-div-icon',
         html: `
           <div class="custom-stop-marker ${isAssigned ? 'assigned-stop' : ''}" title="${stop.stop_name} (#${index + 1})">
-            <div class="stop-marker-halo"></div>
-            <div class="stop-marker-dot"></div>
+            <div class="stop-marker-halo" style="${isHostel ? 'width:32px; height:32px; background:rgba(245,158,11,0.32);' : ''}"></div>
+            <div class="stop-marker-dot" style="${isHostel ? 'width:15px; height:15px; background:#f59e0b; border:2px solid #fff;' : ''}"></div>
+            ${isHostel ? '<span style="position:absolute; top:-22px; font-size:10px; font-weight:700; background:#0f172a; color:#fff; padding:1px 5px; border-radius:4px; white-space:nowrap; box-shadow:0 2px 5px rgba(0,0,0,0.2);">🏨 Hostel</span>' : ''}
           </div>
         `,
-        iconSize: [28, 28],
-        iconAnchor: [14, 14]
+        iconSize: [32, 32],
+        iconAnchor: [16, 16]
       });
 
       const marker = L.marker([stop.latitude, stop.longitude], { icon: stopIcon })
@@ -133,15 +141,16 @@ class MapViewComponent {
         .bindPopup(`
           <div style="font-family: var(--font-family); padding: 4px;">
             <div style="font-weight: 700; font-size: 14px; color: #0f172a;">${stop.stop_name}</div>
-            <div style="font-size: 11px; color: #64748b; margin-top: 2px;">Stop #${index + 1} • ${stop.address || ''}</div>
-            ${isAssigned ? '<div style="margin-top:6px; display:inline-block; font-size:10.5px; font-weight:700; background:#d1fae5; color:#065f46; padding:2px 8px; border-radius:99px;">Your Assigned Pickup Stop</div>' : ''}
+            <div style="font-size: 11px; color: #64748b; margin-top: 2px;">Lavasa Route Stop #${index + 1} • ${stop.address || ''}</div>
+            ${isHostel ? '<div style="margin-top:6px; display:inline-block; font-size:10.5px; font-weight:700; background:#fef3c7; color:#92400e; padding:2px 8px; border-radius:99px;">Designated Student Hostel</div>' : ''}
+            ${isAssigned ? '<div style="margin-top:4px; display:inline-block; font-size:10.5px; font-weight:700; background:#d1fae5; color:#065f46; padding:2px 8px; border-radius:99px;">Your Assigned Pickup Stop</div>' : ''}
           </div>
         `);
 
       this.stopMarkers.push(marker);
     });
 
-    // Draw route polyline
+    // Draw route polyline through Lavasa
     this.routePolyline = L.polyline(latLngs, {
       color: '#0f172a',
       weight: 4.5,
@@ -150,6 +159,9 @@ class MapViewComponent {
       lineCap: 'round',
       lineJoin: 'round'
     }).addTo(this.map);
+
+    // Fit map bounds to show full Lavasa route nicely
+    this.map.fitBounds(this.routePolyline.getBounds(), { padding: [50, 50] });
 
     // Feed waypoints to GPS Simulator
     if (window.gpsEngine) {
@@ -183,7 +195,6 @@ class MapViewComponent {
 
       this.busMarker = L.marker([lat, lng], { icon: busIcon, zIndexOffset: 1000 }).addTo(this.map);
     } else {
-      // Smoothly update location
       this.busMarker.setLatLng([lat, lng]);
       const coreElem = document.querySelector('.bus-marker-core');
       if (coreElem) {
@@ -196,8 +207,7 @@ class MapViewComponent {
     this.currentLocation = locationData;
     this.renderBusMarker(locationData);
 
-    // Update Floating HUD
-    const speed = Math.round(locationData.speed || 35);
+    const speed = Math.round(locationData.speed || 32);
     const speedElem = document.getElementById('hudSpeedAge');
     if (speedElem) {
       speedElem.textContent = `${speed} km/h`;
@@ -247,12 +257,10 @@ class MapViewComponent {
   }
 
   attachEvents() {
-    // Recenter button
     document.getElementById('recenterBtn')?.addEventListener('click', () => {
       this.recenter();
     });
 
-    // Simulation toggle
     const simBtn = document.getElementById('simToggleBtn');
     if (simBtn) {
       simBtn.addEventListener('click', () => {
@@ -268,16 +276,15 @@ class MapViewComponent {
           });
           simBtn.classList.add('active');
           document.getElementById('simBtnLabel').textContent = 'Simulating';
-          window.toast?.success('Live GPS route simulation active.');
+          window.toast?.success('Live GPS route simulation active in Lavasa.');
         }
       });
     }
 
-    // Speed multiplier toggle
     const speedBtn = document.getElementById('simSpeedBtn');
     if (speedBtn) {
       const speeds = [1, 2, 5, 10];
-      let sIdx = 1; // start at 2x
+      let sIdx = 1;
       speedBtn.addEventListener('click', () => {
         sIdx = (sIdx + 1) % speeds.length;
         const mult = speeds[sIdx];
@@ -287,7 +294,6 @@ class MapViewComponent {
       });
     }
 
-    // Support / SOS button
     document.getElementById('mapSupportBtn')?.addEventListener('click', () => {
       window.app?.openSosModal();
     });

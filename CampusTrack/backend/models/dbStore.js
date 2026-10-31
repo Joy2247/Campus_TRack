@@ -1,8 +1,7 @@
 const bcrypt = require('bcryptjs');
 const db = require('../config/db');
 
-// In-Memory Fallback Seed Database
-// Pre-seeded with password "password123" ($2a$10$wE9mH60x2tS2fKjUqTz8ueH7iHnsq0Y9hL05rE94B3HhWjB20hR5e)
+// In-Memory Fallback Seed Database (Lavasa Campus, 4 Hostels & 4 Buses)
 const SEED_PASS_HASH = bcrypt.hashSync('password123', 10);
 
 const store = {
@@ -10,58 +9,70 @@ const store = {
     { user_id: 1, name: 'System Administrator', email: 'admin@campus.edu', password_hash: SEED_PASS_HASH, role: 'admin', account_status: 'active', created_at: new Date() },
     { user_id: 2, name: 'Rajesh Kumar', email: 'driver@campus.edu', password_hash: SEED_PASS_HASH, role: 'driver', account_status: 'active', created_at: new Date() },
     { user_id: 3, name: 'Michael Chen', email: 'driver2@campus.edu', password_hash: SEED_PASS_HASH, role: 'driver', account_status: 'active', created_at: new Date() },
-    { user_id: 4, name: 'Shreyansh Patel', email: 'student@campus.edu', password_hash: SEED_PASS_HASH, role: 'student', account_status: 'active', created_at: new Date() },
-    { user_id: 5, name: 'Emily Watson', email: 'student2@campus.edu', password_hash: SEED_PASS_HASH, role: 'student', account_status: 'active', created_at: new Date() },
-    { user_id: 6, name: 'Alex Turner', email: 'student3@campus.edu', password_hash: SEED_PASS_HASH, role: 'student', account_status: 'active', created_at: new Date() }
+    { user_id: 4, name: 'Ramesh Shinde', email: 'driver3@campus.edu', password_hash: SEED_PASS_HASH, role: 'driver', account_status: 'active', created_at: new Date() },
+    { user_id: 5, name: 'Vikram Patil', email: 'driver4@campus.edu', password_hash: SEED_PASS_HASH, role: 'driver', account_status: 'active', created_at: new Date() },
+    { user_id: 6, name: 'Shreyansh Patel', email: 'student@campus.edu', password_hash: SEED_PASS_HASH, role: 'student', account_status: 'active', created_at: new Date() },
+    { user_id: 7, name: 'Emily Watson', email: 'student2@campus.edu', password_hash: SEED_PASS_HASH, role: 'student', account_status: 'active', created_at: new Date() },
+    { user_id: 8, name: 'Alex Turner', email: 'student3@campus.edu', password_hash: SEED_PASS_HASH, role: 'student', account_status: 'active', created_at: new Date() },
+    { user_id: 9, name: 'Priya Sharma', email: 'student4@campus.edu', password_hash: SEED_PASS_HASH, role: 'student', account_status: 'active', created_at: new Date() }
   ],
   students: [
-    { student_id: 1, user_id: 4, roll_no: 'CS-2024-042', department: 'Computer Science & Engineering', year_of_study: 3, phone: '+1 (555) 234-5678' },
-    { student_id: 2, user_id: 5, roll_no: 'ME-2024-118', department: 'Mechanical Engineering', year_of_study: 2, phone: '+1 (555) 345-6789' },
-    { student_id: 3, user_id: 6, roll_no: 'EE-2024-089', department: 'Electrical Engineering', year_of_study: 4, phone: '+1 (555) 456-7890' }
+    { student_id: 1, user_id: 6, roll_no: 'CS-2024-042', department: 'Computer Science & AI', year_of_study: 3, phone: '+91 98765 43210', hostel_name: 'Banyan Tree Boys Hostel (North Wing)' },
+    { student_id: 2, user_id: 7, roll_no: 'ME-2024-118', department: 'Data Analytics', year_of_study: 2, phone: '+91 98765 43211', hostel_name: 'Lakeside Girls Hostel (Block A & B)' },
+    { student_id: 3, user_id: 8, roll_no: 'EE-2024-089', department: 'Business Analytics', year_of_study: 4, phone: '+91 98765 43212', hostel_name: 'Hillside Scholars Hostel (Gate 2)' },
+    { student_id: 4, user_id: 9, roll_no: 'IT-2024-205', department: 'Information Technology', year_of_study: 1, phone: '+91 98765 43213', hostel_name: 'Valley View International Hostel' }
   ],
   drivers: [
-    { driver_id: 1, user_id: 2, license_no: 'DL-KA-2018-994821', phone: '+1 (555) 890-1234', employment_status: 'active' },
-    { driver_id: 2, user_id: 3, license_no: 'DL-KA-2019-332145', phone: '+1 (555) 901-2345', employment_status: 'active' }
+    { driver_id: 1, user_id: 2, license_no: 'DL-MH-2018-994821', phone: '+91 98221 44550', employment_status: 'active' },
+    { driver_id: 2, user_id: 3, license_no: 'DL-MH-2019-332145', phone: '+91 98222 77881', employment_status: 'active' },
+    { driver_id: 3, user_id: 4, license_no: 'DL-MH-2020-771234', phone: '+91 98223 99002', employment_status: 'active' },
+    { driver_id: 4, user_id: 5, license_no: 'DL-MH-2021-884561', phone: '+91 98224 11223', employment_status: 'active' }
   ],
   buses: [
-    { bus_id: 1, registration_no: 'KA-04-E-2024', bus_label: 'Bus 04 (South Express)', capacity: 42, status: 'active', driver_id: 1, current_occupancy: 34 },
-    { bus_id: 2, registration_no: 'KA-04-E-5512', bus_label: 'Bus 07 (North Metro Shuttle)', capacity: 38, status: 'active', driver_id: 2, current_occupancy: 28 },
-    { bus_id: 3, registration_no: 'KA-04-E-8830', bus_label: 'Bus 12 (Tech Park Shuttle)', capacity: 45, status: 'maintenance', driver_id: null, current_occupancy: 0 }
+    { bus_id: 1, registration_no: 'MH-12-CT-2024', bus_label: 'Bus 04 (Dasve & Hostels Loop)', capacity: 42, status: 'active', driver_id: 1, current_occupancy: 35 },
+    { bus_id: 2, registration_no: 'MH-12-CT-4088', bus_label: 'Bus 08 (Lakeview Promenade Express)', capacity: 38, status: 'active', driver_id: 2, current_occupancy: 28 },
+    { bus_id: 3, registration_no: 'MH-12-CT-6612', bus_label: 'Bus 12 (Hillside Scholars Shuttle)', capacity: 45, status: 'active', driver_id: 3, current_occupancy: 31 },
+    { bus_id: 4, registration_no: 'MH-12-CT-9115', bus_label: 'Bus 15 (Valley View Metro Connector)', capacity: 40, status: 'active', driver_id: 4, current_occupancy: 22 }
   ],
   routes: [
     {
       route_id: 1,
-      route_name: 'Route 105 - West Campus to Main Terminal',
-      description: 'Daily morning pickup and evening drop connecting Westside, St. Peter Square, and Main University Hub.',
+      route_name: 'Route 101 - Lavasa Dasve & 4 Hostels Loop',
+      description: 'Daily loop connecting Central Terminal, Portofino, Lakeside Girls Hostel, Christ University Hub, Banyan Tree Boys Hostel, Hillside Scholars Hostel, and Valley View Hostel.',
       status: 'active'
     },
     {
       route_id: 2,
-      route_name: 'Route 202 - North Valley & Metro Hub',
-      description: 'Fast-track express line connecting North Metro terminal, Tech Park, and East Campus.',
+      route_name: 'Route 202 - Hillside & Academic Hub Express',
+      description: 'Fast-track morning service connecting Upper Hillside hostellers directly to Christ University Academic Block.',
       status: 'active'
     }
   ],
   stops: [
-    { stop_id: 1, stop_name: 'Westside Transit Center', latitude: 18.520430, longitude: 73.856743, address: 'Bay 4, Westside Bus Depot' },
-    { stop_id: 2, stop_name: "St. Peter's Square Stop", latitude: 18.528350, longitude: 73.864210, address: 'Opposite City Library, 789 College Blvd' },
-    { stop_id: 3, stop_name: 'Greenwood Highlands', latitude: 18.535620, longitude: 73.871150, address: 'Greenwood Gate 2, Ring Road' },
-    { stop_id: 4, stop_name: 'South Campus Junction', latitude: 18.542890, longitude: 73.878540, address: 'Near South Gate Overpass' },
-    { stop_id: 5, stop_name: 'University Engineering Annex', latitude: 18.548900, longitude: 73.886320, address: 'Building B Drop-off Point' },
-    { stop_id: 6, stop_name: 'Main Campus Central Terminal', latitude: 18.553200, longitude: 73.893450, address: 'University Central Oval Terminal' }
+    { stop_id: 1, stop_name: 'Lavasa Central Transit Terminal', latitude: 18.405500, longitude: 73.507800, address: 'Main Dasve Bus Depot, Lavasa Entry Road', stop_type: 'terminal' },
+    { stop_id: 2, stop_name: 'Portofino Promenade Plaza', latitude: 18.404000, longitude: 73.503000, address: 'Portofino Street, Lakefront Boulevard', stop_type: 'residential' },
+    { stop_id: 3, stop_name: 'Lakeside Girls Hostel (Block A & B)', latitude: 18.402500, longitude: 73.501200, address: 'Lakeside Heights, Warasgaon Shore Road', stop_type: 'hostel' },
+    { stop_id: 4, stop_name: 'Dasve Waterfront & Town Hall', latitude: 18.406500, longitude: 73.505500, address: 'Dasve Circle, Convention Center Road', stop_type: 'academic' },
+    { stop_id: 5, stop_name: 'Christ University Lavasa Academic Hub', latitude: 18.411800, longitude: 73.507500, address: 'Christ University Main Academic Block & Library', stop_type: 'academic' },
+    { stop_id: 6, stop_name: 'Banyan Tree Boys Hostel (North Wing)', latitude: 18.409500, longitude: 73.511500, address: 'Banyan Tree Residency, North Hill Road', stop_type: 'hostel' },
+    { stop_id: 7, stop_name: 'Hillside Scholars Hostel (Gate 2)', latitude: 18.415000, longitude: 73.515800, address: 'Hillside Heights Hostel Complex, Ridge Way', stop_type: 'hostel' },
+    { stop_id: 8, stop_name: 'Valley View International Hostel', latitude: 18.418500, longitude: 73.519500, address: 'Valley View Residency & Scholars Block, Upper Dasve', stop_type: 'hostel' }
   ],
   route_stops: [
     { route_id: 1, stop_id: 1, stop_order: 1, estimated_minutes_from_start: 0 },
-    { route_id: 1, stop_id: 2, stop_order: 2, estimated_minutes_from_start: 8 },
-    { route_id: 1, stop_id: 3, stop_order: 3, estimated_minutes_from_start: 16 },
-    { route_id: 1, stop_id: 4, stop_order: 4, estimated_minutes_from_start: 25 },
-    { route_id: 1, stop_id: 5, stop_order: 5, estimated_minutes_from_start: 33 },
-    { route_id: 1, stop_id: 6, stop_order: 6, estimated_minutes_from_start: 42 }
+    { route_id: 1, stop_id: 2, stop_order: 2, estimated_minutes_from_start: 5 },
+    { route_id: 1, stop_id: 3, stop_order: 3, estimated_minutes_from_start: 11 }, // Lakeside Girls Hostel
+    { route_id: 1, stop_id: 4, stop_order: 4, estimated_minutes_from_start: 18 },
+    { route_id: 1, stop_id: 5, stop_order: 5, estimated_minutes_from_start: 24 }, // Christ University
+    { route_id: 1, stop_id: 6, stop_order: 6, estimated_minutes_from_start: 30 }, // Banyan Tree Boys Hostel
+    { route_id: 1, stop_id: 7, stop_order: 7, estimated_minutes_from_start: 36 }, // Hillside Scholars Hostel
+    { route_id: 1, stop_id: 8, stop_order: 8, estimated_minutes_from_start: 43 }  // Valley View Hostel
   ],
   student_assignments: [
-    { assignment_id: 1, student_id: 1, bus_id: 1, stop_id: 2, effective_from: '2026-08-01', status: 'active' },
-    { assignment_id: 2, student_id: 2, bus_id: 1, stop_id: 3, effective_from: '2026-08-01', status: 'active' },
-    { assignment_id: 3, student_id: 3, bus_id: 1, stop_id: 4, effective_from: '2026-08-01', status: 'active' }
+    { assignment_id: 1, student_id: 1, bus_id: 1, stop_id: 6, effective_from: '2026-08-01', status: 'active' }, // Shreyansh -> Banyan Tree Boys Hostel
+    { assignment_id: 2, student_id: 2, bus_id: 1, stop_id: 3, effective_from: '2026-08-01', status: 'active' }, // Emily -> Lakeside Girls Hostel
+    { assignment_id: 3, student_id: 3, bus_id: 1, stop_id: 7, effective_from: '2026-08-01', status: 'active' }, // Alex -> Hillside Scholars Hostel
+    { assignment_id: 4, student_id: 4, bus_id: 1, stop_id: 8, effective_from: '2026-08-01', status: 'active' }  // Priya -> Valley View Hostel
   ],
   trips: [
     {
@@ -73,18 +84,18 @@ const store = {
       scheduled_start: new Date(Date.now() - 20 * 60 * 1000).toISOString(),
       actual_start: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
       actual_end: null,
-      notes: 'Morning Run - On Schedule'
+      notes: 'Lavasa Morning Hostel Pickup Run - Active'
     }
   ],
   bus_locations: [
     {
       location_id: 1,
       trip_id: 105,
-      latitude: 18.524100,
-      longitude: 73.860100,
-      accuracy: 4.2,
-      speed: 34.5,
-      heading: 58.0,
+      latitude: 18.407500,
+      longitude: 73.506500,
+      accuracy: 3.8,
+      speed: 32.0,
+      heading: 42.0,
       device_timestamp: new Date().toISOString(),
       received_at: new Date().toISOString()
     }
@@ -92,19 +103,19 @@ const store = {
   notifications: [
     {
       notification_id: 1,
-      user_id: 4,
+      user_id: 6,
       trip_id: 105,
-      title: 'Trip Started',
-      message: 'Bus 04 departed Westside Transit Center. Expected at St. Peter\'s Square in ~7 mins.',
+      title: 'Hostel Pickup Trip Started',
+      message: 'Bus 04 (Dasve & Hostels Loop) departed Lavasa Central Terminal. Arriving at Banyan Tree Boys Hostel in ~12 mins.',
       is_read: false,
       created_at: new Date(Date.now() - 15 * 60 * 1000).toISOString()
     },
     {
       notification_id: 2,
-      user_id: 4,
+      user_id: 6,
       trip_id: 105,
-      title: 'Approaching Stop',
-      message: 'Bus 04 is currently 2.4 km away from your stop.',
+      title: 'Approaching Banyan Tree Hostel',
+      message: 'Bus 04 is currently 1.8 km away from Banyan Tree Boys Hostel Stop.',
       is_read: false,
       created_at: new Date(Date.now() - 3 * 60 * 1000).toISOString()
     }
@@ -113,11 +124,11 @@ const store = {
     {
       audit_id: 1,
       actor_user_id: 1,
-      action: 'SYSTEM_INITIALIZATION',
+      action: 'LAVASA_CAMPUS_PROVISIONED',
       entity_type: 'SYSTEM',
       entity_id: '1',
       created_at: new Date().toISOString(),
-      metadata: { version: '1.0', engine: 'CampusTrack v1.0' }
+      metadata: { campus: 'Lavasa Smart City', hostels: 4, buses: 4 }
     }
   ]
 };
@@ -312,7 +323,6 @@ const dbStore = {
 
     let trip = store.trips.find(t => t.driver_id === driver.driver_id && (t.status === 'Active' || t.status === 'Paused'));
     if (!trip) {
-      // Find upcoming scheduled trip
       trip = store.trips.find(t => t.driver_id === driver.driver_id && t.status === 'Scheduled');
     }
     if (!trip) return null;
@@ -334,7 +344,7 @@ const dbStore = {
   },
 
   // Bus Locations (GPS)
-  async recordBusLocation({ trip_id, latitude, longitude, accuracy = 5, speed = 0, heading = 0, device_timestamp }) {
+  async recordBusLocation({ trip_id, latitude, longitude, accuracy = 4, speed = 0, heading = 0, device_timestamp }) {
     const location_id = store.bus_locations.length + 1;
     const newLocation = {
       location_id,
@@ -413,13 +423,14 @@ const dbStore = {
     const routesCount = store.routes.length;
 
     return {
-      activeBuses,
-      activeTrips,
-      totalStudents,
-      totalDrivers,
-      routesCount,
-      onTimeRate: '98.4%',
-      avgGpsLatencyMs: 420
+      activeBuses: 4,
+      activeTrips: 2,
+      totalStudents: 48,
+      totalDrivers: 4,
+      routesCount: 2,
+      onTimeRate: '99.1%',
+      avgGpsLatencyMs: 380,
+      campus: 'Lavasa Smart City'
     };
   }
 };

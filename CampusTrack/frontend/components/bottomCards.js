@@ -1,6 +1,5 @@
 // ==========================================================================
-// CampusTrack - Bottom 3 Cards Component
-// Exact reproduction of the reference UI bottom card deck
+// CampusTrack - Bottom 3 Cards Component (Lavasa Edition)
 // ==========================================================================
 
 class BottomCardsComponent {
@@ -12,44 +11,42 @@ class BottomCardsComponent {
     if (!this.container) return;
 
     const stop = data.stop || {
-      stop_name: "St. Peter's Square Stop",
-      address: "789 College Blvd, North Campus - Gate 3"
+      stop_name: "Banyan Tree Boys Hostel (North Wing)",
+      address: "Banyan Tree Residency, North Hill Road, Lavasa"
     };
 
     const bus = data.bus || {
-      bus_label: "Bus 04 (South Express)",
-      registration_no: "KA-04-E-2024",
+      bus_label: "Bus 04 (Dasve & Hostels Loop)",
+      registration_no: "MH-12-CT-2024",
       driver_name: "Rajesh Kumar",
-      driver_phone: "+1 (555) 890-1234",
+      driver_phone: "+91 98221 44550",
       capacity: 42,
-      current_occupancy: 34
+      current_occupancy: 35
     };
 
-    const eta = data.eta || { minutes: 7, distanceKm: 2.4 };
-    const loc = data.location || { speed: 35, accuracy: 4.2, isLive: true };
+    const eta = data.eta || { minutes: 8, distanceKm: 1.8 };
+    const loc = data.location || { speed: 32, accuracy: 3.8, isLive: true };
 
-    const occupancy = bus.current_occupancy || 34;
+    const occupancy = bus.current_occupancy || 35;
     const capacity = bus.capacity || 42;
     const occupancyPct = Math.round((occupancy / capacity) * 100);
 
-    // SVG semi-circle arc calculation (perimeter = PI * R)
-    // Radius = 80, Arc circumference = 3.14159 * 80 = ~251.3
     const radius = 80;
     const arcTotal = Math.PI * radius; // ~251.3
     const filledLength = (occupancyPct / 100) * arcTotal;
 
     this.container.innerHTML = `
       <div class="bottom-cards-deck">
-        <!-- Card 1: Stop Location & 3 Metric Tiles -->
+        <!-- Card 1: Stop / Hostel Location & 3 Metric Tiles -->
         <div class="dash-card">
           <div>
             <div class="card-location-header">
               <div class="location-title-wrap">
-                <span class="location-badge-label">Assigned Pickup Stop</span>
+                <span class="location-badge-label">Assigned Student Residence</span>
                 <h3 class="location-main-name" id="cardStopName">${stop.stop_name}</h3>
                 <p class="location-sub-address" id="cardStopAddress">${stop.address}</p>
               </div>
-              <div class="heart-pin-icon" title="Favorited Student Stop">
+              <div class="heart-pin-icon" title="Favorited Hostel Stop">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                 </svg>
@@ -57,7 +54,7 @@ class BottomCardsComponent {
             </div>
 
             <div class="location-date-row">
-              <span>Route 105 • Stop #2</span>
+              <span>Lavasa Route 101 • Stop #6</span>
               <span>31 Oct 2026</span>
             </div>
           </div>
@@ -93,7 +90,7 @@ class BottomCardsComponent {
               </div>
               <div>
                 <div class="metric-tile-label">GPS Accuracy</div>
-                <div class="metric-tile-value" id="cardGpsVal">±${loc.accuracy || 4}m</div>
+                <div class="metric-tile-value" id="cardGpsVal">±${loc.accuracy || 3.8}m</div>
               </div>
             </div>
           </div>
@@ -101,8 +98,7 @@ class BottomCardsComponent {
 
         <!-- Card 2: Visual Hero Vehicle & Driver -->
         <div class="dash-card card-visual-media">
-          <!-- Real architectural bus transit image -->
-          <img class="vehicle-cover-img" src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=700&q=80" alt="Campus Bus Coach" onerror="this.src='https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=700&q=80'" />
+          <img class="vehicle-cover-img" src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=700&q=80" alt="Lavasa Campus Coach" onerror="this.src='https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=700&q=80'" />
           <div class="visual-overlay-gradient"></div>
 
           <div class="visual-content-body">
@@ -114,24 +110,23 @@ class BottomCardsComponent {
             <div class="visual-bus-sub">
               <span>${bus.registration_no}</span>
               <span>•</span>
-              <span style="color:#34d399; font-weight:600;">Active On Route</span>
+              <span style="color:#34d399; font-weight:600;">Active in Lavasa</span>
             </div>
           </div>
         </div>
 
-        <!-- Card 3: Commuter Community & Radial Gauge Arc (Exact Match to Screenshot!) -->
+        <!-- Card 3: Hostel Commuters & Radial Gauge Arc (Exact Match to Screenshot!) -->
         <div class="dash-card">
           <div>
             <div class="card-capacity-header">
               <div>
-                <h4 class="capacity-title">Commuters</h4>
-                <p class="capacity-subtitle">Join our growing community of active campus members.</p>
+                <h4 class="capacity-title">Hostel Commuters</h4>
+                <p class="capacity-subtitle">Connect across all 4 Lavasa student residences.</p>
               </div>
-              <!-- Avatar Stack -->
               <div class="avatar-stack">
-                <img class="avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80" alt="Student" />
-                <img class="avatar-img" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&q=80" alt="Student" />
-                <img class="avatar-img" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&q=80" alt="Student" />
+                <img class="avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80" alt="Hosteller" />
+                <img class="avatar-img" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&q=80" alt="Hosteller" />
+                <img class="avatar-img" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&q=80" alt="Hosteller" />
                 <div class="avatar-more-count">+${Math.max(1, occupancy - 3)}</div>
               </div>
             </div>
@@ -146,9 +141,7 @@ class BottomCardsComponent {
                   <stop offset="100%" stop-color="#fbbf24" />
                 </linearGradient>
               </defs>
-              <!-- Background Arc -->
               <path class="gauge-bg-path" d="M 20 100 A 80 80 0 0 1 180 100" />
-              <!-- Filled Meter Arc -->
               <path class="gauge-meter-path" id="gaugeMeterPath"
                 d="M 20 100 A 80 80 0 0 1 180 100"
                 stroke-dasharray="${filledLength} ${arcTotal}" />
@@ -156,7 +149,7 @@ class BottomCardsComponent {
 
             <div class="gauge-stats-overlay">
               <div class="gauge-big-number" id="cardGaugeNumber">${occupancy} <span style="font-size:16px; font-weight:600; color:#64748b;">/ ${capacity}</span></div>
-              <div class="gauge-sub-label">assigned members (${occupancyPct}%)</div>
+              <div class="gauge-sub-label">hostellers onboard (${occupancyPct}%)</div>
             </div>
           </div>
         </div>
@@ -175,7 +168,7 @@ class BottomCardsComponent {
     }
     if (accuracy !== undefined) {
       const el = document.getElementById('cardGpsVal');
-      if (el) el.textContent = `±${Math.round(accuracy)}m`;
+      if (el) el.textContent = `±${accuracy.toFixed(1)}m`;
     }
   }
 }

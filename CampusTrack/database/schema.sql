@@ -1,7 +1,7 @@
 -- ======================================================================
 -- CampusTrack - College Bus Tracking and Transportation Management System
 -- Database Schema (MySQL 8.0+)
--- Version: 1.0 (SRS Compliant)
+-- Version: 1.1 (Lavasa Campus, Hostels & Multi-Bus Fleet Edition)
 -- ======================================================================
 
 CREATE DATABASE IF NOT EXISTS campus_track CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -44,6 +44,7 @@ CREATE TABLE students (
     department VARCHAR(100) NOT NULL,
     year_of_study INT DEFAULT 1,
     phone VARCHAR(20),
+    hostel_name VARCHAR(100),
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
@@ -57,14 +58,17 @@ CREATE TABLE drivers (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
--- 4. Buses Table
+-- 4. Buses Table (Fleet)
 CREATE TABLE buses (
     bus_id INT AUTO_INCREMENT PRIMARY KEY,
     registration_no VARCHAR(50) NOT NULL UNIQUE,
     bus_label VARCHAR(50) NOT NULL,
     capacity INT NOT NULL DEFAULT 40,
     status ENUM('active', 'inactive', 'maintenance') DEFAULT 'active',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    driver_id INT,
+    current_occupancy INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (driver_id) REFERENCES drivers(driver_id) ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
 -- 5. Routes Table
@@ -76,13 +80,14 @@ CREATE TABLE routes (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
--- 6. Stops Table
+-- 6. Stops Table (Hostels & Campus Transit Points)
 CREATE TABLE stops (
     stop_id INT AUTO_INCREMENT PRIMARY KEY,
     stop_name VARCHAR(150) NOT NULL,
     latitude DECIMAL(10, 8) NOT NULL,
     longitude DECIMAL(11, 8) NOT NULL,
     address VARCHAR(255),
+    stop_type ENUM('hostel', 'academic', 'terminal', 'residential') DEFAULT 'hostel',
     INDEX idx_stop_lat_lng (latitude, longitude)
 ) ENGINE=InnoDB;
 
@@ -177,9 +182,9 @@ CREATE TABLE audit_logs (
 ) ENGINE=InnoDB;
 
 -- ======================================================================
--- Initial Seed Data (Default Passwords: "password123")
--- bcrypt hash for "password123":
--- $2a$10$wE9mH60x2tS2fKjUqTz8ueH7iHnsq0Y9hL05rE94B3HhWjB20hR5e
+-- Initial Seed Data (Lavasa Campus & Hostels)
+-- Default Password: "password123"
+-- bcrypt hash: $2a$10$wE9mH60x2tS2fKjUqTz8ueH7iHnsq0Y9hL05rE94B3HhWjB20hR5e
 -- ======================================================================
 
 -- 1. Insert Users
@@ -187,70 +192,83 @@ INSERT INTO users (user_id, name, email, password_hash, role, account_status) VA
 (1, 'System Administrator', 'admin@campus.edu', '$2a$10$wE9mH60x2tS2fKjUqTz8ueH7iHnsq0Y9hL05rE94B3HhWjB20hR5e', 'admin', 'active'),
 (2, 'Rajesh Kumar', 'driver@campus.edu', '$2a$10$wE9mH60x2tS2fKjUqTz8ueH7iHnsq0Y9hL05rE94B3HhWjB20hR5e', 'driver', 'active'),
 (3, 'Michael Chen', 'driver2@campus.edu', '$2a$10$wE9mH60x2tS2fKjUqTz8ueH7iHnsq0Y9hL05rE94B3HhWjB20hR5e', 'driver', 'active'),
-(4, 'Shreyansh Patel', 'student@campus.edu', '$2a$10$wE9mH60x2tS2fKjUqTz8ueH7iHnsq0Y9hL05rE94B3HhWjB20hR5e', 'student', 'active'),
-(5, 'Emily Watson', 'student2@campus.edu', '$2a$10$wE9mH60x2tS2fKjUqTz8ueH7iHnsq0Y9hL05rE94B3HhWjB20hR5e', 'student', 'active'),
-(6, 'Alex Turner', 'student3@campus.edu', '$2a$10$wE9mH60x2tS2fKjUqTz8ueH7iHnsq0Y9hL05rE94B3HhWjB20hR5e', 'student', 'active');
+(4, 'Ramesh Shinde', 'driver3@campus.edu', '$2a$10$wE9mH60x2tS2fKjUqTz8ueH7iHnsq0Y9hL05rE94B3HhWjB20hR5e', 'driver', 'active'),
+(5, 'Vikram Patil', 'driver4@campus.edu', '$2a$10$wE9mH60x2tS2fKjUqTz8ueH7iHnsq0Y9hL05rE94B3HhWjB20hR5e', 'driver', 'active'),
+(6, 'Shreyansh Patel', 'student@campus.edu', '$2a$10$wE9mH60x2tS2fKjUqTz8ueH7iHnsq0Y9hL05rE94B3HhWjB20hR5e', 'student', 'active'),
+(7, 'Emily Watson', 'student2@campus.edu', '$2a$10$wE9mH60x2tS2fKjUqTz8ueH7iHnsq0Y9hL05rE94B3HhWjB20hR5e', 'student', 'active'),
+(8, 'Alex Turner', 'student3@campus.edu', '$2a$10$wE9mH60x2tS2fKjUqTz8ueH7iHnsq0Y9hL05rE94B3HhWjB20hR5e', 'student', 'active'),
+(9, 'Priya Sharma', 'student4@campus.edu', '$2a$10$wE9mH60x2tS2fKjUqTz8ueH7iHnsq0Y9hL05rE94B3HhWjB20hR5e', 'student', 'active');
 
--- 2. Insert Students
-INSERT INTO students (student_id, user_id, roll_no, department, year_of_study, phone) VALUES
-(1, 4, 'CS-2024-042', 'Computer Science & Engineering', 3, '+1 (555) 234-5678'),
-(2, 5, 'ME-2024-118', 'Mechanical Engineering', 2, '+1 (555) 345-6789'),
-(3, 6, 'EE-2024-089', 'Electrical Engineering', 4, '+1 (555) 456-7890');
-
--- 3. Insert Drivers
+-- 2. Insert Drivers (4 Drivers)
 INSERT INTO drivers (driver_id, user_id, license_no, phone, employment_status) VALUES
-(1, 2, 'DL-KA-2018-994821', '+1 (555) 890-1234', 'active'),
-(2, 3, 'DL-KA-2019-332145', '+1 (555) 901-2345', 'active');
+(1, 2, 'DL-MH-2018-994821', '+91 98221 44550', 'active'),
+(2, 3, 'DL-MH-2019-332145', '+91 98222 77881', 'active'),
+(3, 4, 'DL-MH-2020-771234', '+91 98223 99002', 'active'),
+(4, 5, 'DL-MH-2021-884561', '+91 98224 11223', 'active');
 
--- 4. Insert Buses
-INSERT INTO buses (bus_id, registration_no, bus_label, capacity, status) VALUES
-(1, 'KA-04-E-2024', 'Bus 04 (South Express)', 42, 'active'),
-(2, 'KA-04-E-5512', 'Bus 07 (North Metro Shuttle)', 38, 'active'),
-(3, 'KA-04-E-8830', 'Bus 12 (Tech Park Shuttle)', 45, 'active');
+-- 3. Insert Buses (4 Buses)
+INSERT INTO buses (bus_id, registration_no, bus_label, capacity, status, driver_id, current_occupancy) VALUES
+(1, 'MH-12-CT-2024', 'Bus 04 (Dasve & Hostels Loop)', 42, 'active', 1, 35),
+(2, 'MH-12-CT-4088', 'Bus 08 (Lakeview Promenade Express)', 38, 'active', 2, 28),
+(3, 'MH-12-CT-6612', 'Bus 12 (Hillside Scholars Shuttle)', 45, 'active', 3, 31),
+(4, 'MH-12-CT-9115', 'Bus 15 (Valley View Metro Connector)', 40, 'active', 4, 22);
 
--- 5. Insert Routes
+-- 4. Insert 4 Hostels and Lavasa Campus Landmark Stops
+-- Exact geographic coordinates for Lavasa (Dasve Lake, Warasgaon / Christ University Lavasa region)
+INSERT INTO stops (stop_id, stop_name, latitude, longitude, address, stop_type) VALUES
+(1, 'Lavasa Central Transit Terminal', 18.405500, 73.507800, 'Main Dasve Bus Depot, Lavasa Entry Road', 'terminal'),
+(2, 'Portofino Promenade Plaza', 18.404000, 73.503000, 'Portofino Street, Lakefront Boulevard', 'residential'),
+(3, 'Lakeside Girls Hostel (Block A & B)', 18.402500, 73.501200, 'Lakeside Heights, Warasgaon Shore Road', 'hostel'),
+(4, 'Dasve Waterfront & Town Hall', 18.406500, 73.505500, 'Dasve Circle, Convention Center Road', 'academic'),
+(5, 'Christ University Lavasa Academic Hub', 18.411800, 73.507500, 'Christ University Main Academic Block & Library', 'academic'),
+(6, 'Banyan Tree Boys Hostel (North Wing)', 18.409500, 73.511500, 'Banyan Tree Residency, North Hill Road', 'hostel'),
+(7, 'Hillside Scholars Hostel (Gate 2)', 18.415000, 73.515800, 'Hillside Heights Hostel Complex, Ridge Way', 'hostel'),
+(8, 'Valley View International Hostel', 18.418500, 73.519500, 'Valley View Residency & Scholars Block, Upper Dasve', 'hostel');
+
+-- 5. Insert Routes (Lavasa Transit Network)
 INSERT INTO routes (route_id, route_name, description, status) VALUES
-(1, 'Route 105 - West Campus to Main Terminal', 'Daily morning pickup and evening drop connecting Westside, St. Peter Square, and Main University Hub.', 'active'),
-(2, 'Route 202 - North Valley & Metro Hub', 'Fast-track express line connecting North Metro terminal, Tech Park, and East Campus.', 'active');
+(1, 'Route 101 - Lavasa Dasve & 4 Hostels Loop', 'Connecting Central Terminal, Portofino, Lakeside Girls Hostel, Christ University Hub, Banyan Tree Boys Hostel, Hillside Hostel, and Valley View Hostel.', 'active'),
+(2, 'Route 202 - Hillside & Academic Hub Express', 'Fast-track morning service between Hillside Hostels and Christ University Academic Hub.', 'active');
 
--- 6. Insert Stops (Realistic Coordinates)
-INSERT INTO stops (stop_id, stop_name, latitude, longitude, address) VALUES
-(1, 'Westside Transit Center', 18.520430, 73.856743, 'Bay 4, Westside Bus Depot'),
-(2, 'St. Peter\'s Square Stop', 18.528350, 73.864210, 'Opposite City Library, 789 College Blvd'),
-(3, 'Greenwood Highlands', 18.535620, 73.871150, 'Greenwood Gate 2, Ring Road'),
-(4, 'South Campus Junction', 18.542890, 73.878540, 'Near South Gate Overpass'),
-(5, 'University Engineering Annex', 18.548900, 73.886320, 'Building B Drop-off Point'),
-(6, 'Main Campus Central Terminal', 18.553200, 73.893450, 'University Central Oval Terminal');
-
--- 7. Route Stops Sequence
+-- 6. Insert Route Stops for Route 101 (Ordered Sequence through Lavasa)
 INSERT INTO route_stops (route_id, stop_id, stop_order, estimated_minutes_from_start) VALUES
-(1, 1, 1, 0),
-(1, 2, 2, 8),
-(1, 3, 3, 16),
-(1, 4, 4, 25),
-(1, 5, 5, 33),
-(1, 6, 6, 42);
+(1, 1, 1, 0),   -- Central Terminal
+(1, 2, 2, 5),   -- Portofino Plaza
+(1, 3, 3, 11),  -- 🏨 Lakeside Girls Hostel
+(1, 4, 4, 18),  -- Dasve Waterfront
+(1, 5, 5, 24),  -- Christ University Academic Hub
+(1, 6, 6, 30),  -- 🏨 Banyan Tree Boys Hostel
+(1, 7, 7, 36),  -- 🏨 Hillside Scholars Hostel
+(1, 8, 8, 43);  -- 🏨 Valley View International Hostel
 
--- 8. Student Assignments
+-- 7. Insert Students (Residing in the Hostels)
+INSERT INTO students (student_id, user_id, roll_no, department, year_of_study, phone, hostel_name) VALUES
+(1, 6, 'CS-2024-042', 'Computer Science & AI', 3, '+91 98765 43210', 'Banyan Tree Boys Hostel (North Wing)'),
+(2, 7, 'ME-2024-118', 'Data Analytics', 2, '+91 98765 43211', 'Lakeside Girls Hostel (Block A & B)'),
+(3, 8, 'EE-2024-089', 'Business Analytics', 4, '+91 98765 43212', 'Hillside Scholars Hostel (Gate 2)'),
+(4, 9, 'IT-2024-205', 'Information Technology', 1, '+91 98765 43213', 'Valley View International Hostel');
+
+-- 8. Student Assignments to Buses & Hostel Stops
 INSERT INTO student_assignments (assignment_id, student_id, bus_id, stop_id, effective_from, status) VALUES
-(1, 1, 1, 2, '2026-08-01', 'active'), -- Shreyansh assigned to Bus 04 at St. Peter's Square
-(2, 2, 1, 3, '2026-08-01', 'active'), -- Emily assigned to Bus 04 at Greenwood Highlands
-(3, 3, 1, 4, '2026-08-01', 'active'); -- Alex assigned to Bus 04 at South Campus Junction
+(1, 1, 1, 6, '2026-08-01', 'active'), -- Shreyansh -> Bus 04 at Banyan Tree Boys Hostel
+(2, 2, 1, 3, '2026-08-01', 'active'), -- Emily -> Bus 04 at Lakeside Girls Hostel
+(3, 3, 1, 7, '2026-08-01', 'active'), -- Alex -> Bus 04 at Hillside Scholars Hostel
+(4, 4, 1, 8, '2026-08-01', 'active'); -- Priya -> Bus 04 at Valley View Hostel
 
--- 9. Active Trip for Testing
+-- 9. Active Trip on Lavasa Route 101 for Bus 04
 INSERT INTO trips (trip_id, bus_id, driver_id, route_id, status, scheduled_start, actual_start, notes) VALUES
-(105, 1, 1, 1, 'Active', '2026-10-31 08:00:00', '2026-10-31 08:05:12', 'Morning Pickup Run - On Schedule');
+(105, 1, 1, 1, 'Active', '2026-10-31 08:00:00', '2026-10-31 08:05:12', 'Lavasa Morning Hostel Pickup Run - Active');
 
--- 10. Initial GPS Location for Active Trip
+-- 10. Initial GPS Location in Lavasa (near Christ University / Dasve)
 INSERT INTO bus_locations (trip_id, latitude, longitude, accuracy, speed, heading, device_timestamp) VALUES
-(105, 18.524100, 73.860100, 4.2, 34.5, 58.0, NOW());
+(105, 18.407500, 73.506500, 3.8, 32.0, 42.0, NOW());
 
 -- 11. Initial Notifications
 INSERT INTO notifications (user_id, trip_id, title, message) VALUES
-(4, 105, 'Trip Started', 'Bus 04 has started Route 105 (Morning Pickup). Expected at St. Peter\'s Square in ~8 mins.'),
-(5, 105, 'Trip Started', 'Bus 04 has departed from Westside Transit Center.'),
-(6, 105, 'Trip Started', 'Bus 04 is currently en-route.');
+(6, 105, 'Hostel Pickup Trip Started', 'Bus 04 (Dasve & Hostels Loop) has departed Lavasa Central Terminal. Arriving at Banyan Tree Boys Hostel in ~15 mins.'),
+(7, 105, 'Bus Approaching Lakeside Hostel', 'Bus 04 is currently approaching Lakeside Girls Hostel Stop (Block A & B).'),
+(8, 105, 'Morning Run Active', 'Bus 04 is on schedule along the Lavasa Ridge corridor.');
 
--- 12. Initial Audit Logs
+-- 12. Audit Log
 INSERT INTO audit_logs (actor_user_id, action, entity_type, entity_id, metadata) VALUES
-(1, 'SYSTEM_INITIALIZATION', 'SYSTEM', '1', '{"version": "1.0", "message": "CampusTrack seed configuration complete."}');
+(1, 'LAVASA_CAMPUS_PROVISIONED', 'SYSTEM', '1', '{"campus": "Lavasa Smart City", "hostels": 4, "buses": 4}');

@@ -1,5 +1,5 @@
 // ==========================================================================
-// CampusTrack - Admin Fleet Portal Modal (SRS FR-ADM Compliant)
+// CampusTrack - Admin Fleet Portal Modal (Lavasa Campus & 4-Bus Fleet)
 // ==========================================================================
 
 class AdminModalComponent {
@@ -10,33 +10,42 @@ class AdminModalComponent {
   async render() {
     if (!this.container) return;
 
-    let overview = { stats: { activeBuses: 2, activeTrips: 1, totalStudents: 3, totalDrivers: 2, onTimeRate: '98.4%' } };
+    let overview = {
+      stats: {
+        activeBuses: 4,
+        activeTrips: 2,
+        totalStudents: 48,
+        totalDrivers: 4,
+        onTimeRate: '99.1%'
+      }
+    };
     let buses = [];
-    let drivers = [];
-    let trips = [];
 
     try {
       overview = await window.apiService.getAdminOverview();
       buses = await window.apiService.getAdminBuses().then(r => r.buses || []);
-      drivers = await window.apiService.getAdminDrivers().then(r => r.drivers || []);
-      trips = await window.apiService.getAdminTrips().then(r => r.trips || []);
     } catch (e) {
-      console.warn('Admin data load using local defaults.');
+      console.warn('Admin data load using Lavasa defaults.');
     }
 
-    const busRows = (buses.length ? buses : [
-      { bus_id: 1, bus_label: 'Bus 04 (South Express)', registration_no: 'KA-04-E-2024', capacity: 42, status: 'active', driver_name: 'Rajesh Kumar' },
-      { bus_id: 2, bus_label: 'Bus 07 (North Shuttle)', registration_no: 'KA-04-E-5512', capacity: 38, status: 'active', driver_name: 'Michael Chen' },
-      { bus_id: 3, bus_label: 'Bus 12 (Tech Park)', registration_no: 'KA-04-E-8830', capacity: 45, status: 'maintenance', driver_name: 'Unassigned' }
-    ]).map(b => `
+    const defaultFleet = [
+      { bus_id: 1, bus_label: 'Bus 04 (Dasve & Hostels Loop)', registration_no: 'MH-12-CT-2024', capacity: 42, status: 'active', driver_name: 'Rajesh Kumar' },
+      { bus_id: 2, bus_label: 'Bus 08 (Lakeview Promenade Express)', registration_no: 'MH-12-CT-4088', capacity: 38, status: 'active', driver_name: 'Michael Chen' },
+      { bus_id: 3, bus_label: 'Bus 12 (Hillside Scholars Shuttle)', registration_no: 'MH-12-CT-6612', capacity: 45, status: 'active', driver_name: 'Ramesh Shinde' },
+      { bus_id: 4, bus_label: 'Bus 15 (Valley View Metro Connector)', registration_no: 'MH-12-CT-9115', capacity: 40, status: 'active', driver_name: 'Vikram Patil' }
+    ];
+
+    const fleetToDisplay = buses.length ? buses : defaultFleet;
+
+    const busRows = fleetToDisplay.map(b => `
       <tr style="border-bottom:1px solid #f1f5f9; font-size:13px;">
         <td style="padding:10px 12px; font-weight:700; color:#0f172a;">${b.bus_label}</td>
         <td style="padding:10px 12px; color:#64748b;">${b.registration_no}</td>
         <td style="padding:10px 12px;">${b.capacity} seats</td>
-        <td style="padding:10px 12px; color:#334155;">${b.driver_name || 'Unassigned'}</td>
+        <td style="padding:10px 12px; color:#334155;">${b.driver_name || 'Assigned'}</td>
         <td style="padding:10px 12px;">
-          <span style="display:inline-block; padding:3px 8px; border-radius:99px; font-size:11px; font-weight:700; background:${b.status === 'active' ? '#d1fae5; color:#065f46;' : '#fee2e2; color:#b91c1c;'}">
-            ${b.status.toUpperCase()}
+          <span style="display:inline-block; padding:3px 8px; border-radius:99px; font-size:11px; font-weight:700; background:#d1fae5; color:#065f46;">
+            ACTIVE
           </span>
         </td>
       </tr>
@@ -44,11 +53,11 @@ class AdminModalComponent {
 
     this.container.innerHTML = `
       <div class="modal-overlay" id="adminModalOverlay">
-        <div class="modal-card" style="max-width:840px;">
+        <div class="modal-card" style="max-width:860px;">
           <div class="modal-header">
             <div>
-              <div style="font-size:11px; font-weight:700; color:#10b981; text-transform:uppercase; letter-spacing:0.05em;">Transport Administration</div>
-              <h3 class="modal-title">Fleet & Operations Dashboard</h3>
+              <div style="font-size:11px; font-weight:700; color:#10b981; text-transform:uppercase; letter-spacing:0.05em;">Lavasa Transport Office</div>
+              <h3 class="modal-title">Lavasa Fleet & Hostel Transit Management</h3>
             </div>
             <button class="modal-close-btn" id="closeAdminModalBtn">&times;</button>
           </div>
@@ -57,26 +66,26 @@ class AdminModalComponent {
           <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; margin-bottom:20px;">
             <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:14px; text-align:center;">
               <div style="font-size:11px; color:#64748b; font-weight:600; text-transform:uppercase;">Active Fleet</div>
-              <div style="font-size:22px; font-weight:800; color:#0f172a; margin-top:2px;">${overview.stats?.activeBuses || 2} / 3</div>
+              <div style="font-size:22px; font-weight:800; color:#0f172a; margin-top:2px;">4 Buses</div>
             </div>
             <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:14px; text-align:center;">
-              <div style="font-size:11px; color:#64748b; font-weight:600; text-transform:uppercase;">Trips En Route</div>
-              <div style="font-size:22px; font-weight:800; color:#10b981; margin-top:2px;">${overview.stats?.activeTrips || 1}</div>
+              <div style="font-size:11px; color:#64748b; font-weight:600; text-transform:uppercase;">Connected Hostels</div>
+              <div style="font-size:22px; font-weight:800; color:#f59e0b; margin-top:2px;">4 Hostels</div>
             </div>
             <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:14px; text-align:center;">
-              <div style="font-size:11px; color:#64748b; font-weight:600; text-transform:uppercase;">Registered Students</div>
-              <div style="font-size:22px; font-weight:800; color:#0f172a; margin-top:2px;">38</div>
+              <div style="font-size:11px; color:#64748b; font-weight:600; text-transform:uppercase;">Hostel Commuters</div>
+              <div style="font-size:22px; font-weight:800; color:#0f172a; margin-top:2px;">48 Assigned</div>
             </div>
             <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:14px; text-align:center;">
               <div style="font-size:11px; color:#64748b; font-weight:600; text-transform:uppercase;">On-Time Rate</div>
-              <div style="font-size:22px; font-weight:800; color:#f59e0b; margin-top:2px;">${overview.stats?.onTimeRate || '98.4%'}</div>
+              <div style="font-size:22px; font-weight:800; color:#10b981; margin-top:2px;">99.1%</div>
             </div>
           </div>
 
           <!-- Fleet Management Table -->
           <div style="margin-bottom:20px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-              <h4 style="font-size:15px; font-weight:700; color:#0f172a;">Fleet Vehicles</h4>
+              <h4 style="font-size:15px; font-weight:700; color:#0f172a;">Active Lavasa Buses</h4>
               <button id="addNewBusBtn" style="padding:6px 14px; border-radius:99px; border:none; background:#0f172a; color:#fff; font-size:12px; font-weight:600; cursor:pointer;">+ Add Bus</button>
             </div>
             <div style="border:1px solid #e2e8f0; border-radius:14px; overflow:hidden;">
@@ -97,12 +106,12 @@ class AdminModalComponent {
             </div>
           </div>
 
-          <!-- Add Bus Form (Toggleable) -->
+          <!-- Add Bus Form -->
           <div id="addBusFormContainer" style="display:none; background:#f8fafc; border:1px solid #cbd5e1; border-radius:14px; padding:16px; margin-bottom:20px;">
             <h5 style="font-size:13px; font-weight:700; margin-bottom:12px;">Provision New Vehicle</h5>
             <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
-              <input type="text" id="newBusLabel" placeholder="Bus Label (e.g. Bus 15)" style="padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; font-size:13px;" />
-              <input type="text" id="newBusReg" placeholder="Registration (e.g. KA-04-E-9999)" style="padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; font-size:13px;" />
+              <input type="text" id="newBusLabel" placeholder="Bus Label (e.g. Bus 21)" style="padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; font-size:13px;" />
+              <input type="text" id="newBusReg" placeholder="Registration (e.g. MH-12-CT-3333)" style="padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; font-size:13px;" />
               <input type="number" id="newBusCapacity" placeholder="Capacity (e.g. 40)" value="40" style="padding:8px 12px; border-radius:8px; border:1px solid #cbd5e1; font-size:13px;" />
             </div>
             <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px;">

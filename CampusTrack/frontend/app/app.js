@@ -1,12 +1,11 @@
 // ==========================================================================
-// CampusTrack - Master Application Orchestrator
-// Coordinates Services, Components, State, Sockets, and Role Views
+// CampusTrack - Master Application Orchestrator (Lavasa Campus & 4 Hostels)
 // ==========================================================================
 
 class CampusTrackApp {
   constructor() {
     this.currentUser = {
-      user_id: 4,
+      user_id: 6,
       name: 'Shreyansh Patel',
       email: 'student@campus.edu',
       role: 'student'
@@ -20,7 +19,7 @@ class CampusTrackApp {
     this.lastLocationTime = Date.now();
     this.staleThresholdSeconds = 30;
 
-    // Component instances
+    // Components
     this.sidebar = null;
     this.topbar = null;
     this.mapView = null;
@@ -35,7 +34,7 @@ class CampusTrackApp {
   }
 
   async init() {
-    console.log('[CampusTrack] Initializing system...');
+    console.log('[CampusTrack] Initializing Lavasa Campus Fleet System...');
 
     // 1. Initialize Components
     this.sidebar = new window.SidebarComponent('sidebarContainer');
@@ -63,7 +62,6 @@ class CampusTrackApp {
         this.currentRole = meRes.user.role;
       }
     } catch (e) {
-      // Auto-login default demo student if no valid token
       try {
         const loginRes = await window.apiService.login('student@campus.edu', 'password123');
         this.currentUser = loginRes.user;
@@ -72,7 +70,7 @@ class CampusTrackApp {
       }
     }
 
-    // 4. Load Route & Assignment Data
+    // 4. Load Lavasa Route, Hostels & Assignment Data
     await this.loadInitialData();
 
     // 5. Connect Socket.IO
@@ -81,24 +79,22 @@ class CampusTrackApp {
     // 6. Start Stale GPS Heartbeat Monitor (SRS FR-RT-007)
     this.startHeartbeatMonitor();
 
-    // 7. Auto-start route simulation for immediate visual gratification
+    // 7. Auto-start route simulation through Lavasa
     setTimeout(() => {
       window.gpsEngine.startSimulation(105, (loc) => {
         this.onGpsUpdate(loc);
       });
-      window.toast?.success('CampusTrack live tracking connected to Bus 04.');
+      window.toast?.success('Connected to Bus 04 in Lavasa (Dasve & Hostels Loop).');
     }, 1200);
   }
 
   async loadInitialData() {
     try {
-      // Load Route 1 (West Campus)
       const routeRes = await window.apiService.getRouteDetails(1);
       if (routeRes && routeRes.route) {
         this.currentRoute = routeRes.route;
       }
 
-      // Load Student Assignment
       const assignRes = await window.apiService.getStudentAssignment();
       if (assignRes && assignRes.assignment) {
         const a = assignRes.assignment;
@@ -107,32 +103,33 @@ class CampusTrackApp {
         this.currentTrip = a.activeTrip;
       }
     } catch (e) {
-      console.warn('Initial data loaded from fallback defaults.');
+      console.warn('Initial data loaded from Lavasa defaults.');
       this.currentRoute = {
         route_id: 1,
-        route_name: 'Route 105 - West Campus to Main Terminal',
+        route_name: 'Route 101 - Lavasa Dasve & 4 Hostels Loop',
         stops: [
-          { stop_id: 1, stop_order: 1, stop_name: 'Westside Transit Center', latitude: 18.520430, longitude: 73.856743, address: 'Bay 4, Westside Bus Depot' },
-          { stop_id: 2, stop_order: 2, stop_name: "St. Peter's Square Stop", latitude: 18.528350, longitude: 73.864210, address: 'Opposite City Library, 789 College Blvd' },
-          { stop_id: 3, stop_order: 3, stop_name: 'Greenwood Highlands', latitude: 18.535620, longitude: 73.871150, address: 'Greenwood Gate 2, Ring Road' },
-          { stop_id: 4, stop_order: 4, stop_name: 'South Campus Junction', latitude: 18.542890, longitude: 73.878540, address: 'Near South Gate Overpass' },
-          { stop_id: 5, stop_order: 5, stop_name: 'University Engineering Annex', latitude: 18.548900, longitude: 73.886320, address: 'Building B Drop-off Point' },
-          { stop_id: 6, stop_order: 6, stop_name: 'Main Campus Central Terminal', latitude: 18.553200, longitude: 73.893450, address: 'University Central Oval Terminal' }
+          { stop_id: 1, stop_order: 1, stop_name: 'Lavasa Central Transit Terminal', latitude: 18.405500, longitude: 73.507800, address: 'Main Dasve Bus Depot' },
+          { stop_id: 2, stop_order: 2, stop_name: 'Portofino Promenade Plaza', latitude: 18.404000, longitude: 73.503000, address: 'Portofino Lakefront Street' },
+          { stop_id: 3, stop_order: 3, stop_name: 'Lakeside Girls Hostel (Block A & B)', latitude: 18.402500, longitude: 73.501200, address: 'Lakeside Heights, Warasgaon Shore' },
+          { stop_id: 4, stop_order: 4, stop_name: 'Dasve Waterfront & Town Hall', latitude: 18.406500, longitude: 73.505500, address: 'Convention Center Circle' },
+          { stop_id: 5, stop_order: 5, stop_name: 'Christ University Lavasa Academic Hub', latitude: 18.411800, longitude: 73.507500, address: 'Academic Block & Central Library' },
+          { stop_id: 6, stop_order: 6, stop_name: 'Banyan Tree Boys Hostel (North Wing)', latitude: 18.409500, longitude: 73.511500, address: 'North Hill Road' },
+          { stop_id: 7, stop_order: 7, stop_name: 'Hillside Scholars Hostel (Gate 2)', latitude: 18.415000, longitude: 73.515800, address: 'Hillside Heights Hostel Complex' },
+          { stop_id: 8, stop_order: 8, stop_name: 'Valley View International Hostel', latitude: 18.418500, longitude: 73.519500, address: 'Upper Dasve Ridge' }
         ]
       };
-      this.assignedStop = this.currentRoute.stops[1]; // St. Peter's Square Stop
+      this.assignedStop = this.currentRoute.stops[5]; // Banyan Tree Boys Hostel
       this.currentBus = {
         bus_id: 1,
-        bus_label: 'Bus 04 (South Express)',
-        registration_no: 'KA-04-E-2024',
+        bus_label: 'Bus 04 (Dasve & Hostels Loop)',
+        registration_no: 'MH-12-CT-2024',
         driver_name: 'Rajesh Kumar',
         capacity: 42,
-        current_occupancy: 34
+        current_occupancy: 35
       };
       this.currentTrip = { trip_id: 105, status: 'Active' };
     }
 
-    // Render Components with live data
     this.topbar.render({
       routes: [this.currentRoute],
       currentRouteId: this.currentRoute?.route_id || 1,
@@ -149,8 +146,8 @@ class CampusTrackApp {
     this.bottomCards.render({
       stop: this.assignedStop,
       bus: this.currentBus,
-      eta: { minutes: 7, distanceKm: 2.4 },
-      location: { speed: 35, accuracy: 4.2 }
+      eta: { minutes: 8, distanceKm: 1.8 },
+      location: { speed: 32, accuracy: 3.8 }
     });
 
     this.driverModal.render(this.currentTrip, this.currentBus);
@@ -160,19 +157,17 @@ class CampusTrackApp {
     window.socketService.connect();
     window.socketService.joinTrip(105);
 
-    // Location update listener
     window.socketService.on('locationUpdate', (data) => {
       this.onGpsUpdate(data);
     });
 
-    // Trip events
     window.socketService.on('tripStarted', (data) => {
-      window.toast?.success('Trip Started: Bus 04 is now en-route.');
+      window.toast?.success('Trip Started: Bus 04 is now en-route through Lavasa.');
       this.topbar.updateLiveStatus({ isLive: true, isStale: false });
     });
 
     window.socketService.on('tripPaused', (data) => {
-      window.toast?.warning(`Trip Paused: ${data.reason || 'Holding position'}`);
+      window.toast?.warning(`Trip Paused: ${data.reason || 'Holding position in Dasve'}`);
     });
 
     window.socketService.on('tripResumed', () => {
@@ -192,15 +187,13 @@ class CampusTrackApp {
     this.latestLocation = loc;
     this.lastLocationTime = Date.now();
 
-    // 1. Update Map Marker
     this.mapView.updateLiveLocation(loc);
 
-    // 2. Calculate dynamic ETA to student's stop
-    let etaMinutes = 7;
-    let distanceKm = 2.4;
+    let etaMinutes = 8;
+    let distanceKm = 1.8;
 
     if (this.assignedStop) {
-      const R = 6371; // Earth radius km
+      const R = 6371;
       const dLat = (this.assignedStop.latitude - loc.latitude) * Math.PI / 180;
       const dLon = (this.assignedStop.longitude - loc.longitude) * Math.PI / 180;
       const a =
@@ -209,26 +202,23 @@ class CampusTrackApp {
         Math.sin(dLon / 2) * Math.sin(dLon / 2);
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       const straightKm = R * c;
-      distanceKm = parseFloat((straightKm * 1.25).toFixed(1));
+      distanceKm = parseFloat((straightKm * 1.3).toFixed(1)); // Mountain curve factor
       const speedKmH = (loc.speed && loc.speed > 5) ? loc.speed : 30;
       etaMinutes = Math.max(1, Math.round((distanceKm / speedKmH) * 60));
 
-      // Trigger proximity alert if bus is very close (<0.8 km)
-      if (distanceKm <= 0.8 && !this._proximityAlertFired) {
+      if (distanceKm <= 0.6 && !this._proximityAlertFired) {
         this._proximityAlertFired = true;
-        window.toast?.success(`Bus 04 is approaching your stop (${distanceKm} km away)! Get ready to board.`);
+        window.toast?.success(`Bus 04 is approaching your hostel stop (${distanceKm} km away)! Please proceed to the boarding gate.`);
       }
     }
 
-    // 3. Update Map HUD
     this.mapView.updateHud({
       busLabel: this.currentBus?.bus_label || 'Bus 04',
-      stopName: this.assignedStop?.stop_name || "St. Peter's Square",
+      stopName: this.assignedStop?.stop_name || "Banyan Tree Boys Hostel",
       etaMinutes,
       speed: loc.speed
     });
 
-    // 4. Update Bottom Metric Cards
     this.bottomCards.updateMetrics({
       etaMinutes,
       distanceKm,
@@ -236,7 +226,6 @@ class CampusTrackApp {
       accuracy: loc.accuracy
     });
 
-    // 5. Update Top Status
     this.topbar.updateLiveStatus({ isLive: true, isStale: false });
   }
 
@@ -252,6 +241,26 @@ class CampusTrackApp {
         if (hud) hud.classList.add('stale');
       }
     }, 5000);
+  }
+
+  selectBus(busId) {
+    const fleet = [
+      { bus_id: 1, bus_label: 'Bus 04 (Dasve & Hostels Loop)', registration_no: 'MH-12-CT-2024', driver_name: 'Rajesh Kumar', capacity: 42, current_occupancy: 35 },
+      { bus_id: 2, bus_label: 'Bus 08 (Lakeview Promenade Express)', registration_no: 'MH-12-CT-4088', driver_name: 'Michael Chen', capacity: 38, current_occupancy: 28 },
+      { bus_id: 3, bus_label: 'Bus 12 (Hillside Scholars Shuttle)', registration_no: 'MH-12-CT-6612', driver_name: 'Ramesh Shinde', capacity: 45, current_occupancy: 31 },
+      { bus_id: 4, bus_label: 'Bus 15 (Valley View Metro Connector)', registration_no: 'MH-12-CT-9115', driver_name: 'Vikram Patil', capacity: 40, current_occupancy: 22 }
+    ];
+
+    const bus = fleet.find(b => b.bus_id == busId) || fleet[0];
+    this.currentBus = bus;
+    this.bottomCards.render({
+      stop: this.assignedStop,
+      bus: this.currentBus,
+      eta: { minutes: 8, distanceKm: 1.8 },
+      location: { speed: 32, accuracy: 3.8 }
+    });
+    this.mapView.updateHud({ busLabel: bus.bus_label });
+    window.toast?.info(`Viewing telemetry for ${bus.bus_label}`);
   }
 
   switchRole(role) {
@@ -271,7 +280,7 @@ class CampusTrackApp {
       this.adminModal.open();
       window.toast?.info('Admin Fleet Management opened.');
     } else {
-      window.toast?.info('Switched to Student Commuter view.');
+      window.toast?.info('Switched to Student Hostel Commuter view.');
       this.mapView.recenter();
     }
   }
@@ -292,6 +301,18 @@ class CampusTrackApp {
 
   focusStop(stopId) {
     this.mapView.focusStop(stopId);
+    const stop = this.currentRoute?.stops?.find(s => s.stop_id == stopId);
+    if (stop) {
+      this.assignedStop = stop;
+      this.bottomCards.render({
+        stop: this.assignedStop,
+        bus: this.currentBus,
+        eta: { minutes: 8, distanceKm: 1.8 },
+        location: { speed: 32, accuracy: 3.8 }
+      });
+      this.mapView.updateHud({ stopName: stop.stop_name });
+      window.toast?.info(`Selected: ${stop.stop_name}`);
+    }
   }
 
   openDriverModal() { this.driverModal.open(); }
@@ -303,7 +324,6 @@ class CampusTrackApp {
   openReportsModal() { this.reportsModal.open(); }
 }
 
-// Global bootstrap
 document.addEventListener('DOMContentLoaded', () => {
   window.app = new CampusTrackApp();
   window.app.init();
