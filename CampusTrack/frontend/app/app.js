@@ -31,6 +31,7 @@ class CampusTrackApp {
     this.notifModal = null;
     this.sosModal = null;
     this.reportsModal = null;
+    this.githubModal = null;
   }
 
   async init() {
@@ -49,6 +50,7 @@ class CampusTrackApp {
     this.notifModal = new window.NotifModalComponent('notifModalContainer');
     this.sosModal = new window.SosModalComponent('sosModalContainer');
     this.reportsModal = new window.ReportsModalComponent('reportsModalContainer');
+    this.githubModal = new window.GithubModalComponent('githubModalContainer');
 
     // 2. Initial Render
     this.sidebar.render(this.currentUser, 'home');
@@ -118,7 +120,7 @@ class CampusTrackApp {
           { stop_id: 8, stop_order: 8, stop_name: 'Valley View International Hostel', latitude: 18.418500, longitude: 73.519500, address: 'Upper Dasve Ridge' }
         ]
       };
-      this.assignedStop = this.currentRoute.stops[5]; // Banyan Tree Boys Hostel
+      this.assignedStop = this.currentRoute.stops[5];
       this.currentBus = {
         bus_id: 1,
         bus_label: 'Bus 04 (Dasve & Hostels Loop)',
@@ -202,7 +204,7 @@ class CampusTrackApp {
         Math.sin(dLon / 2) * Math.sin(dLon / 2);
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       const straightKm = R * c;
-      distanceKm = parseFloat((straightKm * 1.3).toFixed(1)); // Mountain curve factor
+      distanceKm = parseFloat((straightKm * 1.3).toFixed(1));
       const speedKmH = (loc.speed && loc.speed > 5) ? loc.speed : 30;
       etaMinutes = Math.max(1, Math.round((distanceKm / speedKmH) * 60));
 
@@ -322,6 +324,7 @@ class CampusTrackApp {
   openNotificationsModal() { this.notifModal.open(); }
   openSosModal() { this.sosModal.open(); }
   openReportsModal() { this.reportsModal.open(); }
+  openGithubModal() { this.githubModal.open(); }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
