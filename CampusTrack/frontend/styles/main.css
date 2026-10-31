@@ -1,0 +1,369 @@
+/* ==========================================================================
+   CampusTrack - Design System & Modern UI
+   Inspired by Apple HIG, Minimal Neo-Modernism & Reference Visual Specs
+   ========================================================================== */
+
+:root {
+  --bg-gradient-start: #cadbd8;
+  --bg-gradient-mid: #b8ccc8;
+  --bg-gradient-end: #9cb5b1;
+
+  --card-bg: #ffffff;
+  --card-bg-subtle: #f8fafc;
+  --card-border: rgba(226, 232, 240, 0.85);
+
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
+
+  --primary: #0f172a;
+  --primary-hover: #1e293b;
+  --accent-amber: #f59e0b;
+  --accent-amber-light: #fef3c7;
+  --accent-amber-glow: rgba(245, 158, 11, 0.35);
+
+  --accent-green: #10b981;
+  --accent-green-light: #d1fae5;
+  --accent-red: #ef4444;
+  --accent-blue: #3b82f6;
+
+  --hud-bg: #0f1416;
+  --hud-text: #ffffff;
+
+  --radius-xl: 36px;
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --radius-sm: 10px;
+  --radius-pill: 9999px;
+
+  --shadow-canvas: 0 25px 60px -15px rgba(20, 45, 40, 0.22), 0 0 0 1px rgba(255, 255, 255, 0.6);
+  --shadow-card: 0 10px 25px -5px rgba(15, 23, 42, 0.04), 0 0 0 1px rgba(15, 23, 42, 0.04);
+  --shadow-pill: 0 4px 14px rgba(15, 23, 42, 0.08);
+  --shadow-hud: 0 12px 30px rgba(0, 0, 0, 0.35);
+
+  --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Segoe UI", Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-family);
+  background: radial-gradient(circle at 50% 20%, var(--bg-gradient-start) 0%, var(--bg-gradient-mid) 50%, var(--bg-gradient-end) 100%);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  overflow-x: hidden;
+}
+
+/* Master App Container Window (Tablet/Desktop Frame matching reference screenshot) */
+.app-viewport {
+  width: 100%;
+  max-width: 1380px;
+  min-height: 840px;
+  background: var(--card-bg);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-canvas);
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+/* Left Floating Dock / Sidebar */
+.dock-sidebar {
+  width: 84px;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 14px;
+  z-index: 50;
+  border-right: 1px solid rgba(0, 0, 0, 0.04);
+  flex-shrink: 0;
+}
+
+.dock-top-group,
+.dock-nav-group,
+.dock-bottom-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.brand-badge {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.brand-badge:hover {
+  transform: scale(1.05);
+}
+
+.nav-icon-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-pill);
+  border: none;
+  background: transparent;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  position: relative;
+}
+
+.nav-icon-btn:hover {
+  background: #f1f5f9;
+  color: var(--primary);
+  transform: translateY(-1px);
+}
+
+.nav-icon-btn.active {
+  background: #0f1416;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(15, 20, 22, 0.25);
+}
+
+.nav-icon-btn .badge-dot {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  background: var(--accent-amber);
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+}
+
+.user-avatar-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-pill);
+  background: #0f172a;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 16px;
+  border: 2px solid #e2e8f0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+.user-avatar-btn:hover {
+  transform: scale(1.06);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+}
+
+/* Main Dashboard Layout */
+.dashboard-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 28px 24px 24px;
+  overflow-y: auto;
+  gap: 20px;
+  position: relative;
+  background: #fafcfb;
+}
+
+/* Floating Top Search & Filter Pill Bar */
+.top-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  z-index: 30;
+  flex-wrap: wrap;
+}
+
+.search-pill-container {
+  flex: 1;
+  min-width: 240px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-pill-container svg {
+  position: absolute;
+  left: 16px;
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.search-pill-input {
+  width: 100%;
+  height: 44px;
+  padding: 0 18px 0 44px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  font-size: 14px;
+  color: var(--text-main);
+  outline: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.search-pill-input:focus {
+  border-color: #cbd5e1;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.06);
+}
+
+.filter-dropdown-pill {
+  height: 44px;
+  padding: 0 16px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  background: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.filter-dropdown-pill:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.filter-select {
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 500;
+  color: #334155;
+  outline: none;
+  cursor: pointer;
+}
+
+/* Heartbeat Live GPS Status Badge */
+.live-status-pill {
+  height: 44px;
+  padding: 0 18px;
+  border-radius: var(--radius-pill);
+  background: #ffffff;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.live-beacon-dot {
+  width: 9px;
+  height: 9px;
+  background: var(--accent-green);
+  border-radius: 50%;
+  position: relative;
+}
+
+.live-beacon-dot::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.4);
+  animation: beacon-pulse 1.8s infinite;
+}
+
+@keyframes beacon-pulse {
+  0% { transform: scale(0.6); opacity: 1; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+.live-status-pill.stale .live-beacon-dot {
+  background: var(--accent-amber);
+}
+.live-status-pill.stale .live-beacon-dot::after {
+  background: rgba(245, 158, 11, 0.4);
+}
+
+.live-status-pill.offline .live-beacon-dot {
+  background: var(--accent-red);
+}
+.live-status-pill.offline .live-beacon-dot::after {
+  animation: none;
+  display: none;
+}
+
+/* Quick Role Switcher Buttons */
+.role-switch-container {
+  display: flex;
+  background: #f1f5f9;
+  padding: 3px;
+  border-radius: var(--radius-pill);
+}
+
+.role-btn {
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.role-btn.active {
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  body {
+    padding: 10px;
+  }
+  .app-viewport {
+    border-radius: 20px;
+    flex-direction: column;
+  }
+  .dock-sidebar {
+    width: 100%;
+    height: 60px;
+    flex-direction: row;
+    border-right: none;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    padding: 10px 20px;
+  }
+  .dock-top-group, .dock-nav-group, .dock-bottom-group {
+    flex-direction: row;
+  }
+  .dashboard-main {
+    padding: 16px;
+  }
+}

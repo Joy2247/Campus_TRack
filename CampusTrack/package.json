@@ -1,0 +1,21 @@
+{
+  "name": "campustrack",
+  "version": "1.0.0",
+  "description": "CampusTrack - College Bus Tracking and Transportation Management System",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "node --watch backend/server.js",
+    "install:backend": "npm --prefix backend install"
+  },
+  "keywords": [
+    "bus-tracking",
+    "gps",
+    "socket.io",
+    "nodejs",
+    "mysql",
+    "transport-management",
+    "campustrack"
+  ],
+  "author": "CampusTrack Engineering Team",
+  "license": "MIT"
+}

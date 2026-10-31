@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>CampusTrack - Real-Time College Bus Tracking & Fleet Management</title>
+  <meta name="description" content="CampusTrack is a modern, real-time college bus tracking and transportation management system built with Node.js, Socket.IO, MySQL, and Google Maps." />
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230f172a'><circle cx='12' cy='5' r='3.2'/><circle cx='12' cy='19' r='3.2'/><circle cx='5' cy='12' r='3.2'/><circle cx='19' cy='12' r='3.2'/></svg>" />
+
+  <!-- Leaflet CSS for Map Canvas -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+  <!-- Design System & Component Styles -->
+  <link rel="stylesheet" href="styles/main.css" />
+  <link rel="stylesheet" href="styles/map.css" />
+  <link rel="stylesheet" href="styles/dashboard.css" />
+</head>
+<body>
+
+  <!-- Master App Window Viewport (Tablet/Desktop Frame inspired by modern neo-glass UI) -->
+  <div class="app-viewport">
+    <!-- Left Floating Dock Sidebar -->
+    <aside class="dock-sidebar" id="sidebarContainer"></aside>
+
+    <!-- Main Dashboard Stage -->
+    <main class="dashboard-main">
+      <!-- Floating Top Search & Filter Bar -->
+      <header id="topbarContainer"></header>
+
+      <!-- Map Viewport Canvas with Floating HUD -->
+      <section id="mapContainer"></section>
+
+      <!-- Bottom 3 Dashboard Cards Deck (Exact Match to Reference UI) -->
+      <section id="bottomCardsContainer"></section>
+    </main>
+  </div>
+
+  <!-- Modal Overlays -->
+  <div id="driverModalContainer"></div>
+  <div id="adminModalContainer"></div>
+  <div id="loginModalContainer"></div>
+  <div id="routeModalContainer"></div>
+  <div id="notifModalContainer"></div>
+  <div id="sosModalContainer"></div>
+  <div id="reportsModalContainer"></div>
+
+  <!-- Leaflet Vector Map CDN -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <!-- Socket.IO Client CDN -->
+  <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+
+  <!-- Core Services -->
+  <script src="services/api.js"></script>
+  <script src="services/socket.js"></script>
+  <script src="services/gpsSimulator.js"></script>
+
+  <!-- Notification System -->
+  <script src="components/toast.js"></script>
+
+  <!-- UI Components -->
+  <script src="components/topbar.js"></script>
+  <script src="components/sidebar.js"></script>
+  <script src="components/mapView.js"></script>
+  <script src="components/bottomCards.js"></script>
+  <script src="components/driverModal.js"></script>
+  <script src="components/adminModal.js"></script>
+  <script src="components/routeModal.js"></script>
+  <script src="components/notifModal.js"></script>
+  <script src="components/sosModal.js"></script>
+  <script src="components/reportsModal.js"></script>
+  <script src="pages/loginModal.js"></script>
+
+  <!-- Application Bootstrap -->
+  <script src="app/app.js"></script>
+</body>
+</html>

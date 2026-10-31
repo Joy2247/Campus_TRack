@@ -1,0 +1,261 @@
+/* ==========================================================================
+   CampusTrack - Map Canvas, Custom Markers & HUD
+   Exact aesthetic match to Reference UI with soft pastel tiles & dark HUD capsule
+   ========================================================================== */
+
+.map-wrapper {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  background: #eef3f2;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+
+/* Custom Leaflet Tile Theme Tweaks (Soft Clean Pastel Style) */
+.leaflet-container {
+  font-family: var(--font-family) !important;
+  background-color: #e5edea !important;
+}
+
+.leaflet-tile-pane {
+  filter: saturate(0.85) contrast(0.96) brightness(1.02);
+}
+
+/* Floating Dark HUD Capsule Overlay (Exact visual match to screenshot!) */
+.floating-hud-capsule {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: stretch;
+  background: #0f1416;
+  border-radius: 20px;
+  padding: 6px;
+  gap: 3px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.38), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  z-index: 25;
+  backdrop-filter: blur(12px);
+  user-select: none;
+  animation: hud-appear 0.4s ease-out;
+}
+
+@keyframes hud-appear {
+  0% { opacity: 0; transform: translate(-50%, -10px); }
+  100% { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.hud-segment {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 18px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  min-width: 90px;
+  text-align: center;
+}
+
+.hud-segment.highlight {
+  background: rgba(255, 255, 255, 0.09);
+  padding: 8px 24px;
+}
+
+.hud-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.hud-value.highlight {
+  color: #fbbf24; /* Amber accent */
+}
+
+.hud-label {
+  font-size: 10.5px;
+  font-weight: 500;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-top: 3px;
+}
+
+/* Map Floating Action Button (Bottom Right Chat / SOS / Helper button from screenshot) */
+.map-floating-btn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #0f1416;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 25;
+  transition: all 0.2s ease;
+}
+
+.map-floating-btn:hover {
+  transform: scale(1.08);
+  background: #1e293b;
+}
+
+/* Map Controls Floating Pill (Simulation & Recenter) */
+.map-controls-pill {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: var(--radius-pill);
+  padding: 4px 6px;
+  gap: 6px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  z-index: 25;
+}
+
+.map-pill-btn {
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.18s ease;
+}
+
+.map-pill-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.map-pill-btn.active {
+  background: #0f1416;
+  color: #ffffff;
+}
+
+/* Custom Bus Marker (Animated pulse radar ring + heading arrow) */
+.custom-bus-marker {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bus-marker-core {
+  width: 38px;
+  height: 38px;
+  background: #0f1416;
+  border-radius: 50%;
+  border: 3px solid #ffffff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  position: relative;
+  z-index: 5;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.bus-pulse-ring {
+  position: absolute;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: rgba(245, 158, 11, 0.25);
+  border: 1.5px solid rgba(245, 158, 11, 0.5);
+  animation: pulse-ring 2.2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+  z-index: 2;
+  pointer-events: none;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.4); opacity: 1; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+/* Custom Glowing Amber Route Stop Markers (Exact match to orange dots in reference screenshot!) */
+.custom-stop-marker {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.stop-marker-halo {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(245, 158, 11, 0.26);
+  position: absolute;
+  z-index: 1;
+}
+
+.stop-marker-dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #f59e0b;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  z-index: 2;
+  transition: transform 0.2s ease;
+}
+
+.custom-stop-marker:hover .stop-marker-dot {
+  transform: scale(1.3);
+  background: #d97706;
+}
+
+.custom-stop-marker.assigned-stop .stop-marker-halo {
+  background: rgba(16, 185, 129, 0.3);
+}
+
+.custom-stop-marker.assigned-stop .stop-marker-dot {
+  background: #10b981;
+}
+
+/* Fallback Banner */
+.map-error-banner {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+  color: #b91c1c;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

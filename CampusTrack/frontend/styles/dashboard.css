@@ -1,0 +1,451 @@
+/* ==========================================================================
+   CampusTrack - Bottom 3 Dashboard Cards & Modal Windows
+   Layout replica of reference UI bottom card deck:
+   Card 1: Location & 3 Metric Tiles
+   Card 2: Hero Visual Card (Vehicle / Driver)
+   Card 3: Radial Arc Gauge & Commuter Avatars
+   ========================================================================== */
+
+.bottom-cards-deck {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 18px;
+  width: 100%;
+}
+
+@media (max-width: 1100px) {
+  .bottom-cards-deck {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Base Card Style */
+.dash-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--shadow-card);
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dash-card:hover {
+  box-shadow: 0 14px 34px -8px rgba(15, 23, 42, 0.08);
+}
+
+/* Card 1: Stop & Location Details */
+.card-location-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.location-title-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.location-badge-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 2px;
+}
+
+.location-main-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -0.02em;
+}
+
+.location-sub-address {
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+.heart-pin-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--accent-amber-light);
+  color: var(--accent-amber);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.location-date-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* 3 Rounded Metric Tiles */
+.location-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: auto;
+}
+
+.metric-tile {
+  background: var(--card-bg-subtle);
+  border: 1px solid rgba(226, 232, 240, 0.7);
+  border-radius: var(--radius-md);
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100px;
+  transition: all 0.2s ease;
+}
+
+.metric-tile:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.metric-tile-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 8px;
+}
+
+.metric-tile-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #64748b;
+  line-height: 1.2;
+}
+
+.metric-tile-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -0.02em;
+  margin-top: 2px;
+}
+
+/* Card 2: Visual Hero Card (Vehicle & Driver) */
+.card-visual-media {
+  padding: 0;
+  border-radius: var(--radius-lg);
+  position: relative;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  background: #1e293b;
+}
+
+.vehicle-cover-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.85);
+  transition: transform 0.4s ease;
+}
+
+.card-visual-media:hover .vehicle-cover-img {
+  transform: scale(1.04);
+}
+
+.visual-overlay-gradient {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 75%;
+  background: linear-gradient(to top, rgba(15, 20, 22, 0.92) 0%, rgba(15, 20, 22, 0.4) 60%, transparent 100%);
+  z-index: 2;
+}
+
+.visual-content-body {
+  position: relative;
+  z-index: 5;
+  padding: 18px 20px;
+  color: #ffffff;
+}
+
+.driver-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(8px);
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.visual-bus-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.visual-bus-sub {
+  font-size: 12px;
+  color: #cbd5e1;
+  margin-top: 3px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Card 3: Boarding / Radial Gauge Arc (Exact visual replica of reference screenshot) */
+.card-capacity-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.capacity-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
+}
+
+.capacity-subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+  max-width: 170px;
+  line-height: 1.35;
+  margin-top: 2px;
+}
+
+.avatar-stack {
+  display: flex;
+  align-items: center;
+}
+
+.avatar-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  margin-left: -10px;
+  object-fit: cover;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.avatar-img:first-child {
+  margin-left: 0;
+}
+
+.avatar-more-count {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  border: 2px solid #ffffff;
+  margin-left: -10px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Semi-Circle SVG Radial Gauge */
+.gauge-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-top: 10px;
+}
+
+.gauge-svg {
+  width: 220px;
+  height: 110px;
+  overflow: visible;
+}
+
+.gauge-bg-path {
+  fill: none;
+  stroke: #f1f5f9;
+  stroke-width: 18;
+  stroke-linecap: round;
+}
+
+.gauge-meter-path {
+  fill: none;
+  stroke: url(#gaugeAmberGradient);
+  stroke-width: 18;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.8s ease;
+}
+
+.gauge-stats-overlay {
+  position: absolute;
+  bottom: 0;
+  text-align: center;
+}
+
+.gauge-big-number {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.gauge-sub-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: lowercase;
+  margin-top: 3px;
+}
+
+/* Modals & Dialogs */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(6px);
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-overlay.open {
+  display: flex;
+}
+
+.modal-card {
+  background: #ffffff;
+  border-radius: var(--radius-lg);
+  max-width: 680px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  padding: 28px;
+  position: relative;
+  animation: modal-pop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modal-pop {
+  0% { opacity: 0; transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 14px;
+}
+
+.modal-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.modal-close-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.modal-close-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+/* Toast Notifications Container */
+.toast-container {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toast {
+  background: #0f1416;
+  color: #ffffff;
+  padding: 14px 20px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  font-size: 13.5px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  animation: toast-in 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes toast-in {
+  0% { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.toast.toast-success {
+  border-left: 4px solid var(--accent-green);
+}
+
+.toast.toast-warning {
+  border-left: 4px solid var(--accent-amber);
+}
+
+.toast.toast-error {
+  border-left: 4px solid var(--accent-red);
+}
