@@ -1,5 +1,5 @@
 // ==========================================================================
-// CampusTrack - Bottom 3 Cards Component (Lavasa Edition)
+// CampusTrack - Bottom 3 Cards Component (Lavasa Edition with Boarding Pass)
 // ==========================================================================
 
 class BottomCardsComponent {
@@ -53,13 +53,15 @@ class BottomCardsComponent {
               </div>
             </div>
 
-            <div class="location-date-row">
+            <div class="location-date-row" style="align-items:center;">
               <span>Lavasa Route 101 • Stop #6</span>
-              <span>31 Oct 2026</span>
+              <button id="openPassBtn" style="padding:4px 10px; border-radius:99px; border:1px solid #cbd5e1; background:#ffffff; color:#0f172a; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 4px rgba(0,0,0,0.04);">
+                <span>🎟️ Boarding Pass</span>
+              </button>
             </div>
           </div>
 
-          <!-- 3 Rounded Metric Tiles -->
+          <!-- 3 Rounded Metric Tiles (Exact Layout from Reference Screenshot) -->
           <div class="location-metrics-grid">
             <!-- Tile 1: ETA -->
             <div class="metric-tile">
@@ -83,7 +85,7 @@ class BottomCardsComponent {
               </div>
             </div>
 
-            <!-- Tile 3: Speed / GPS Signal -->
+            <!-- Tile 3: Cruising Speed / GPS -->
             <div class="metric-tile">
               <div class="metric-tile-icon">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"></path></svg>
@@ -102,10 +104,16 @@ class BottomCardsComponent {
           <div class="visual-overlay-gradient"></div>
 
           <div class="visual-content-body">
-            <div class="driver-pill-badge">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-              <span>Driver: ${bus.driver_name || 'Rajesh Kumar'}</span>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div class="driver-pill-badge">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <span>Driver: ${bus.driver_name || 'Rajesh Kumar'}</span>
+              </div>
+              <a href="tel:${bus.driver_phone?.replace(/[^0-9+]/g, '') || '9822144550'}" style="text-decoration:none; padding:4px 10px; border-radius:99px; background:rgba(255,255,255,0.2); backdrop-filter:blur(8px); color:#fff; font-size:11px; font-weight:700; border:1px solid rgba(255,255,255,0.3);">
+                📞 Call Driver
+              </a>
             </div>
+
             <h4 class="visual-bus-name" id="cardBusName">${bus.bus_label}</h4>
             <div class="visual-bus-sub">
               <span>${bus.registration_no}</span>
@@ -155,6 +163,10 @@ class BottomCardsComponent {
         </div>
       </div>
     `;
+
+    document.getElementById('openPassBtn')?.addEventListener('click', () => {
+      window.app?.openBoardingPassModal();
+    });
   }
 
   updateMetrics({ etaMinutes, distanceKm, speed, accuracy }) {

@@ -15,5 +15,6 @@ router.get('/bus/:busId/location', studentController.getBusLocation);
 router.get('/trip', studentController.getTrip);
 router.get('/route/:routeId', studentController.getRouteDetails);
 router.get('/notifications', studentController.getNotifications);
+router.get('/fleet/locations', studentController.getFleetLocations);
 
 module.exports = router;

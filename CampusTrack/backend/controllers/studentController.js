@@ -155,6 +155,32 @@ const studentController = {
     } catch (err) {
       return res.status(500).json({ success: false, error: 'Failed to retrieve notifications.' });
     }
+  },
+
+  async getFleetLocations(req, res) {
+    try {
+      const buses = await dbStore.getAllBuses();
+      const trips = await dbStore.getAllTrips();
+
+      const fleet = buses.map(bus => {
+        const trip = trips.find(t => t.bus_id === bus.bus_id && (t.status === 'Active' || t.status === 'Paused'));
+        return {
+          bus_id: bus.bus_id,
+          bus_label: bus.bus_label,
+          registration_no: bus.registration_no,
+          driver_name: bus.driver_name,
+          capacity: bus.capacity,
+          current_occupancy: bus.current_occupancy,
+          status: bus.status,
+          trip: trip || null,
+          location: trip?.latestLocation || null
+        };
+      });
+
+      return res.json({ success: true, fleet });
+    } catch (err) {
+      return res.status(500).json({ success: false, error: 'Failed to retrieve fleet locations.' });
+    }
   }
 };
 

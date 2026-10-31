@@ -32,10 +32,16 @@ class CampusTrackApp {
     this.sosModal = null;
     this.reportsModal = null;
     this.githubModal = null;
+    this.boardingPassModal = null;
   }
 
   async init() {
     console.log('[CampusTrack] Initializing Lavasa Campus Fleet System...');
+
+    // Theme recovery
+    if (localStorage.getItem('campustrack_theme') === 'dark') {
+      document.body.classList.add('dark-mode');
+    }
 
     // 1. Initialize Components
     this.sidebar = new window.SidebarComponent('sidebarContainer');
@@ -51,6 +57,7 @@ class CampusTrackApp {
     this.sosModal = new window.SosModalComponent('sosModalContainer');
     this.reportsModal = new window.ReportsModalComponent('reportsModalContainer');
     this.githubModal = new window.GithubModalComponent('githubModalContainer');
+    this.boardingPassModal = new window.BoardingPassModalComponent('boardingPassModalContainer');
 
     // 2. Initial Render
     this.sidebar.render(this.currentUser, 'home');
@@ -83,6 +90,10 @@ class CampusTrackApp {
 
     // 7. Auto-start route simulation through Lavasa
     setTimeout(() => {
+      window.gpsEngine.onFleetUpdateCallback = (fleet) => {
+        this.mapView.updateFleetMarkers(fleet);
+      };
+
       window.gpsEngine.startSimulation(105, (loc) => {
         this.onGpsUpdate(loc);
       });
@@ -210,6 +221,7 @@ class CampusTrackApp {
 
       if (distanceKm <= 0.6 && !this._proximityAlertFired) {
         this._proximityAlertFired = true;
+        window.soundService?.playArrivalChime();
         window.toast?.success(`Bus 04 is approaching your hostel stop (${distanceKm} km away)! Please proceed to the boarding gate.`);
       }
     }
@@ -255,6 +267,7 @@ class CampusTrackApp {
 
     const bus = fleet.find(b => b.bus_id == busId) || fleet[0];
     this.currentBus = bus;
+    window.gpsEngine?.selectBus(busId);
     this.bottomCards.render({
       stop: this.assignedStop,
       bus: this.currentBus,
@@ -325,6 +338,13 @@ class CampusTrackApp {
   openSosModal() { this.sosModal.open(); }
   openReportsModal() { this.reportsModal.open(); }
   openGithubModal() { this.githubModal.open(); }
+  openBoardingPassModal() { this.boardingPassModal.open(this.currentUser, this.currentBus, this.assignedStop); }
+
+  toggleTheme() {
+    const isDark = document.body.classList.toggle('dark-mode');
+    localStorage.setItem('campustrack_theme', isDark ? 'dark' : 'light');
+    window.toast?.info(isDark ? '🌙 Night Cockpit Mode activated.' : '☀️ Day Transit Mode activated.');
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {

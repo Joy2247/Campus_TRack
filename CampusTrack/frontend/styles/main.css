@@ -44,6 +44,71 @@
   --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Segoe UI", Roboto, sans-serif;
 }
 
+/* Dark Mode Cockpit Theme */
+body.dark-mode {
+  --bg-gradient-start: #0f172a;
+  --bg-gradient-mid: #090e17;
+  --bg-gradient-end: #020617;
+
+  --card-bg: #111827;
+  --card-bg-subtle: #1f2937;
+  --card-border: rgba(75, 85, 99, 0.6);
+
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-light: #64748b;
+
+  --shadow-canvas: 0 25px 60px -15px rgba(0, 0, 0, 0.75);
+  --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .dashboard-main {
+  background: #0b0f19;
+}
+
+body.dark-mode .search-pill-input,
+body.dark-mode .filter-dropdown-pill,
+body.dark-mode .live-status-pill,
+body.dark-mode .role-switch-container {
+  background: #1e293b;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+body.dark-mode .filter-select {
+  color: #f8fafc;
+}
+
+body.dark-mode .role-btn.active {
+  background: #334155;
+  color: #ffffff;
+}
+
+body.dark-mode .metric-tile {
+  background: #1f2937;
+  border-color: #374151;
+}
+
+body.dark-mode .metric-tile-icon {
+  background: #111827;
+  border-color: #374151;
+  color: #94a3b8;
+}
+
+body.dark-mode .modal-card {
+  background: #111827;
+  color: #f8fafc;
+  border-color: #374151;
+}
+
+body.dark-mode .modal-title {
+  color: #f8fafc;
+}
+
+body.dark-mode .leaflet-tile-pane {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+
 * {
   box-sizing: border-box;
   margin: 0;

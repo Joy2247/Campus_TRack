@@ -87,6 +87,13 @@ class SidebarComponent {
           </svg>
         </button>
 
+        <!-- Dark Cockpit Mode Toggle Button -->
+        <button class="nav-icon-btn" id="navThemeBtn" title="Toggle Night/Day Transit Mode">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
         <!-- User Profile Avatar -->
         <button class="user-avatar-btn" id="userProfileBtn" title="Switch Account / Sign Out">
           ${initial}
@@ -124,6 +131,10 @@ class SidebarComponent {
 
     document.getElementById('navGithubBtn')?.addEventListener('click', () => {
       window.app?.openGithubModal();
+    });
+
+    document.getElementById('navThemeBtn')?.addEventListener('click', () => {
+      window.app?.toggleTheme();
     });
 
     document.getElementById('userProfileBtn')?.addEventListener('click', () => {

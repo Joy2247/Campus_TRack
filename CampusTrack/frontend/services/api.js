@@ -102,6 +102,10 @@ class ApiService {
     return this.request('/student/notifications');
   }
 
+  async getFleetLocations() {
+    return this.request('/student/fleet/locations');
+  }
+
   // Driver Endpoints
   async getDriverAssignedTrip() {
     return this.request('/driver/assigned-trip');
