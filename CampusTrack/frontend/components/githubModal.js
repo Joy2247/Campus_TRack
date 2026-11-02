@@ -5,7 +5,7 @@
 class GithubModalComponent {
   constructor(containerId) {
     this.container = document.getElementById(containerId);
-    this.repoUrl = localStorage.getItem('campustrack_github_repo') || 'https://github.com/your-username/CampusTrack';
+    this.repoUrl = localStorage.getItem('campustrack_github_repo') || 'https://github.com/Joy2247/Campus_TRack';
   }
 
   render() {
